@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Installs cert-manager
 # ---------------------
 # Arguments:
