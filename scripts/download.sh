@@ -5,13 +5,17 @@
 #       or
 #   ENV_VAR=... ./download.sh
 #
-# Example:
-#   Downloading scripts from a feature branch in a temp local folder:
-#     curl ... | GIT_REVISION=refs/heads/feature/init-solution -o temps sh -
+# Examples:
+#   Downloading scripts from a feature branch "init-solution" in a temp local folder "temp":
+#     curl -sfL https://raw.githubusercontent.com/SUSE/lab-setup/feature/init-solution/scripts/download.sh | GIT_REVISION=refs/heads/feature/init-solution sh -s -- -o temp
+#   Downloading scripts from a specific revision "d8b7564fbf91473074e86b598ae06c7e4e522b9f" in the default local folder:
+#     curl -sfL https://raw.githubusercontent.com/SUSE/lab-setup/feature/init-solution/scripts/download.sh | GIT_REVISION=d8b7564fbf91473074e86b598ae06c7e4e522b9f sh -
 #
 # Environment variables:
 #   - GIT_REVISION
-#     Git revision (refs/heads/develop for a branch, refs/tags/v1.3.1 for a tag, d8b7564fbf91473074e86b598ae06c7e4e522b9f for a commit hashcode)
+#     Git revision (refs/heads/<branch-name>, refs/tags/vX.Y.Z for a tag, xxxxxxxxxxxxxxxx for a commit hashcode)
+#   - OUTPUT_FOLDER
+#     Output folder, where the scripts folder will be created with script directory tree inside, overriden if -o is used
 
 info() {
   echo '[INFO] ' "$@"
