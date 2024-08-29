@@ -7,9 +7,9 @@
 #
 # Examples:
 #   Downloading scripts from a feature branch "init-solution" in a temp local folder "temp":
-#     curl -sfL https://raw.githubusercontent.com/SUSE/lab-setup/feature/init-solution/scripts/download.sh | GIT_REVISION=refs/heads/feature/init-solution sh -s -- -o temp
+#     curl -sfL https://raw.githubusercontent.com/SUSE/lab-setup/feature/init-solution/scripts/setup.sh | GIT_REVISION=refs/heads/feature/init-solution sh -s -- -o temp
 #   Downloading scripts from a specific revision "d8b7564fbf91473074e86b598ae06c7e4e522b9f" in the default local folder:
-#     curl -sfL https://raw.githubusercontent.com/SUSE/lab-setup/feature/init-solution/scripts/download.sh | GIT_REVISION=d8b7564fbf91473074e86b598ae06c7e4e522b9f sh -
+#     curl -sfL https://raw.githubusercontent.com/SUSE/lab-setup/feature/init-solution/scripts/setup.sh | GIT_REVISION=d8b7564fbf91473074e86b598ae06c7e4e522b9f sh -
 #
 # Environment variables:
 #   - GIT_REVISION
@@ -66,9 +66,14 @@ cleanup() {
   rm -rf ${GIT_REPO_NAME}-${GIT_FOLDER}
 }
 
+source() {
+  source ${OUTPUT_FOLDER}/scripts/index.sh
+}
+
 {
     verify_system
     setup_env "$@"
     download
+    source
     cleanup
 }
