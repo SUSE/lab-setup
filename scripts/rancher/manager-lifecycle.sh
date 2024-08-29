@@ -7,7 +7,7 @@
 #   - Hostname
 #   - Cluster issuer name (managed by cert-manager)
 # Examples
-#   - install_rancher latest "2.8.2" 1 rancher.random_string.geek letsencrypt-prod
+#   - install_rancher_externalclusterissuer latest "2.8.2" 1 rancher.random_string.geek letsencrypt-prod
 install_rancher_externalclusterissuer() {
   local repository=$1
   local version=$2
