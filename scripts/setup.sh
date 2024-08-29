@@ -59,8 +59,10 @@ setup_env() {
 download() {
   wget https://github.com/SUSE/${GIT_REPO_NAME}/archive/${GIT_REVISION}.zip -O ${GIT_REPO_NAME}.zip
   unzip -o ${GIT_REPO_NAME}.zip
-  rm -rf ${OUTPUT_FOLDER}/scripts
   mkdir -p ${OUTPUT_FOLDER}
+  if [ -d ${OUTPUT_FOLDER}/scripts ]; then
+    rm -rf ${OUTPUT_FOLDER}/scripts
+  fi
   mv -f ${GIT_REPO_NAME}-${GIT_FOLDER}/scripts ${OUTPUT_FOLDER}
 }
 
