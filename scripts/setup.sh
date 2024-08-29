@@ -57,12 +57,13 @@ setup_env() {
 download() {
   wget https://github.com/SUSE/${GIT_REPO_NAME}/archive/${GIT_REVISION}.zip -O ${GIT_REPO_NAME}.zip
   unzip -o ${GIT_REPO_NAME}.zip
+  rm -rf ${OUTPUT_FOLDER}/scripts
   mkdir -p ${OUTPUT_FOLDER}
-  mv ${GIT_REPO_NAME}-${GIT_FOLDER}/scripts ${OUTPUT_FOLDER}
+  mv -f ${GIT_REPO_NAME}-${GIT_FOLDER}/scripts ${OUTPUT_FOLDER}
 }
 
 source_scripts() {
-  source ${OUTPUT_FOLDER}/scripts/index.sh
+  . ${OUTPUT_FOLDER}/scripts/index.sh
 }
 
 cleanup() {
