@@ -61,7 +61,7 @@ download() {
   mv ${GIT_REPO_NAME}-${GIT_FOLDER}/scripts ${OUTPUT_FOLDER}
 }
 
-source() {
+source_scripts() {
   source ${OUTPUT_FOLDER}/scripts/index.sh
 }
 
@@ -71,9 +71,9 @@ cleanup() {
 }
 
 {
-    verify_system
-    setup_env "$@"
-    download
-    source
-    cleanup
+  verify_system
+  setup_env "$@"
+  download
+  source_scripts
+  cleanup
 }

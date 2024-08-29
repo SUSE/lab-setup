@@ -1,1 +1,5 @@
-source kubernetes/cluster-status.sh
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+. "$SCRIPT_DIR/k3s/cluster-lifecycle.sh"
+. "$SCRIPT_DIR/kubernetes/certificate-management.sh"
+. "$SCRIPT_DIR/kubernetes/cluster-status.sh"
+. "$SCRIPT_DIR/rancher/manager-lifecycle.sh"
