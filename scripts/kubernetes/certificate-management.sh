@@ -4,7 +4,7 @@
 #   - Version
 # Examples
 #   - install_certmanager "v1.11.0"
-function install_certmanager() {
+install_certmanager() {
   local version=$1
 
   echo "Installing cert-manager..."
@@ -22,7 +22,7 @@ function install_certmanager() {
 #   - Administrator email address (to receive notifications for Let's Encrypt)
 # Examples
 #   - create_clusterissuers_letsencrypt traefik john.wick@google.com
-function create_clusterissuers_letsencrypt() {
+create_clusterissuers_letsencrypt() {
   local ingressClassname=$1
   local emailAddress=$2
 

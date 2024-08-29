@@ -3,7 +3,7 @@
 # Usage:
 #   curl ... | ENV_VAR=... sh -
 #       or
-#   ENV_VAR=... ./download.sh
+#   ENV_VAR=... ./setup.sh
 #
 # Examples:
 #   Downloading scripts from a feature branch "init-solution" in a temp local folder "temp":

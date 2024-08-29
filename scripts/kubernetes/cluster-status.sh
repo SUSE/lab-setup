@@ -1,5 +1,5 @@
 # Wait for the K3s cluster to be available
-function wait_for_cluster_availability() {
+wait_for_cluster_availability() {
   # checks nodes are ready
   while true; do
     NOT_READY_NODES=$(kubectl get nodes --no-headers 2>/dev/null | grep -v " Ready" | wc -l)

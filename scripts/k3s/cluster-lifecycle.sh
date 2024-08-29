@@ -4,7 +4,7 @@
 #   - K3s version
 # Examples
 #   - create_k3s_cluster "v1.23"
-function create_k3s_cluster() {
+create_k3s_cluster() {
   local version=$1
 
   echo "Create management cluster (K3s)..."
@@ -12,7 +12,7 @@ function create_k3s_cluster() {
 }
 
 # Copy K3s kubeconfig file to local user file
-function copy_k3s_kubeconfig() {
+copy_k3s_kubeconfig() {
   mkdir -p ~/.kube
   cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
   chmod 600 ~/.kube/config
