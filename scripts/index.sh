@@ -1,5 +1,7 @@
-SOURCE_PATH="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
-. "$SOURCE_PATH/k3s/cluster-lifecycle.sh"
-. "$SOURCE_PATH/kubernetes/certificate-management.sh"
-. "$SOURCE_PATH/kubernetes/cluster-status.sh"
-. "$SOURCE_PATH/rancher/manager-lifecycle.sh"
+SCRIPT_FOLDER=$(dirname "$0")
+for file in ${SCRIPT_FOLDER}/*/*.sh
+do {
+  echo "Sourcing ${file}"
+  . $file
+}
+done
