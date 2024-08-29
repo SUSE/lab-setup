@@ -1,1 +1,1 @@
-source scripts/kubernetes/cluster-status.sh
+source kubernetes/cluster-status.sh

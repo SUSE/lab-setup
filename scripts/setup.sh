@@ -61,13 +61,13 @@ download() {
   mv ${GIT_REPO_NAME}-${GIT_FOLDER}/scripts ${OUTPUT_FOLDER}
 }
 
+source() {
+  source ${OUTPUT_FOLDER}/scripts/index.sh
+}
+
 cleanup() {
   rm -f ${GIT_REPO_NAME}.zip
   rm -rf ${GIT_REPO_NAME}-${GIT_FOLDER}
-}
-
-source() {
-  source ${OUTPUT_FOLDER}/scripts/index.sh
 }
 
 {
