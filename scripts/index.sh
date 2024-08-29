@@ -1,4 +1,4 @@
-SCRIPT_FOLDER=$(dirname "$0")
+SCRIPT_FOLDER=$(dirname "${BASH_SOURCE[0]}")
 for file in ${SCRIPT_FOLDER}/*/*.sh
 do {
   echo "Sourcing ${file}"

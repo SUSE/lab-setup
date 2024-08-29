@@ -33,6 +33,7 @@ fatal() {
 }
 
 verify_system() {
+  info 'Verify system requirements'
   if [ -x /usr/bin/git ] || type git > /dev/null 2>&1; then
       return
   fi
@@ -40,6 +41,7 @@ verify_system() {
 }
 
 setup_env() {
+  info 'Setup variables'
   case "$1" in
       ("-o")
           OUTPUT_FOLDER=$2
@@ -57,16 +59,19 @@ setup_env() {
 }
 
 download() {
+  info 'Download scripts'
   wget https://github.com/SUSE/${GIT_REPO_NAME}/archive/${GIT_REVISION}.zip -O ${GIT_REPO_NAME}.zip
   unzip -o ${GIT_REPO_NAME}.zip
   mkdir -p ${OUTPUT_FOLDER}
   if [ -d ${OUTPUT_FOLDER}/scripts ]; then
+    info "Delete ${OUTPUT_FOLDER}/scripts"
     rm -rf ${OUTPUT_FOLDER}/scripts
   fi
-  mv -f ${GIT_REPO_NAME}-${GIT_FOLDER}/scripts ${OUTPUT_FOLDER}
+  mv ${GIT_REPO_NAME}-${GIT_FOLDER}/scripts ${OUTPUT_FOLDER}
 }
 
 cleanup() {
+  info 'Clean-up'
   rm -f ${GIT_REPO_NAME}.zip
   rm -rf ${GIT_REPO_NAME}-${GIT_FOLDER}
 }
