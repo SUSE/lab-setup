@@ -1,9 +1,12 @@
-# Installs cert-manager
-# ---------------------
+# Collection of functions to add components to manage certificates in a Kubernetes cluster
+
+#######################################
+# Install cert-manager and wait for the the application to be running
 # Arguments:
-#   - Version
-# Examples
-#   - install_certmanager "v1.11.0"
+#   cert-manager version
+# Examples:
+#   install_certmanager "v1.11.0"
+#######################################
 install_certmanager() {
   local version=$1
 
@@ -15,13 +18,14 @@ install_certmanager() {
   kubectl wait pods -n cert-manager -l app.kubernetes.io/instance=cert-manager --for condition=Ready
 }
 
-# Create cluster issuers using Let's Encrypt
-# ------------------------------------------
+#######################################
+# Create certificate cluster issuers using Let's Encrypt
 # Arguments:
-#   - Ingress class name (traefik, nginx, etc.)
-#   - Administrator email address (to receive notifications for Let's Encrypt)
-# Examples
-#   - create_clusterissuers_letsencrypt traefik john.wick@google.com
+#   Ingress class name (traefik, nginx, etc.)
+#   administrator email address (to receive notifications for Let's Encrypt)
+# Examples:
+#   create_clusterissuers_letsencrypt traefik john.wick@google.com
+#######################################
 create_clusterissuers_letsencrypt() {
   local ingressClassname=$1
   local emailAddress=$2
@@ -29,5 +33,7 @@ create_clusterissuers_letsencrypt() {
   echo "Creating certificate issuers using Let's Encrypt..."
   helm repo add devpro https://devpro.github.io/helm-charts
   helm repo update
-  helm upgrade --install letsencrypt devpro/letsencrypt --namespace cert-manager --set ingress.className=${ingressClassname} --set registration.emailAddress=${emailAddress}
+  helm upgrade --install letsencrypt devpro/letsencrypt --namespace cert-manager \
+    --set ingress.className=${ingressClassname} \
+    --set registration.emailAddress=${emailAddress}
 }

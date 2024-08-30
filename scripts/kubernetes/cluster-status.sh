@@ -1,4 +1,12 @@
-# Wait for the K3s cluster to be available
+# Collection of functions to add query status on a Kubernetes cluster
+
+#######################################
+# Wait for the K3s cluster to be available (checking nodes and pods)
+# Arguments:
+#   None
+# Examples:
+#   wait_for_cluster_availability
+#######################################
 wait_for_cluster_availability() {
   # checks nodes are ready
   while true; do
