@@ -48,7 +48,8 @@ do_rancher_first_login() {
 
   echo "Do first login on Rancher..."
   BOOTSTRAP_PASSWORD=$(kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{.data.bootstrapPassword|base64decode}}{{ "\n" }}')
-  rancher_login_userpwd 'admin' $BOOTSTRAP_PASSWORD
+  echo "DEBUG BOOTSTRAP_PASSWORD=${BOOTSTRAP_PASSWORD}"
+  rancher_login_userpwd $rancherUrl 'admin' $BOOTSTRAP_PASSWORD
   echo "DEBUG LOGIN_TOKEN=${LOGIN_TOKEN}"
   rancher_update_userpwd $rancherUrl $LOGIN_TOKEN $BOOTSTRAP_PASSWORD $newPassword
   rancher_update_serverurl $rancherUrl $LOGIN_TOKEN

@@ -23,6 +23,7 @@ rancher_login_userpwd() {
       \"username\": \"$username\",
       \"password\": \"$password\"
     }")
+  echo "DEBUG LOGIN_RESPONSE=${LOGIN_RESPONSE}"
   LOGIN_TOKEN=$(echo $LOGIN_RESPONSE | jq -r .token)
 }
 
