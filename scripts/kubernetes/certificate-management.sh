@@ -40,8 +40,8 @@ k8s_create_letsencryptclusterissuer() {
     --set ingress.className=${ingressClassname} \
     --set registration.emailAddress=${emailAddress} \
     2>/dev/null
-  while ! kubectl get clusterissuers --no-headers 2>/dev/null | grep -q .; do
-    echo "Waiting for cluster issuers to be created..."
+  while [ "$(kubectl get clusterissuers -o json | jq '.items != null')" != "true" ]; do
+    echo "Waiting for ClusterIssuers to be available..."
     sleep 5
   done
   while kubectl get clusterissuers -o json | jq -e '.items[] | select(.status.conditions[] | select(.type == "Ready" and .status != "True"))' > /dev/null; do

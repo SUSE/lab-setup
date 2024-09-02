@@ -112,11 +112,12 @@ rancher_create_customcluster() {
 EOF
   )
 
-  CLUSTER_RESPONSE=$(curl -s -k -H "Authorization: Bearer $token" \
+  CLUSTER_CREATION_RESPONSE=$(curl -s -k -H "Authorization: Bearer $token" \
     -H 'Content-Type: application/json' \
     -X POST \
     -d "$CLUSTER_CONFIG" \
     "$rancherUrl/v1/provisioning.cattle.io.clusters")
+  echo "DEBUG CLUSTER_CREATION_RESPONSE=${CLUSTER_CREATION_RESPONSE}"
   sleep 10
 
   rancher_get_clusterid $rancherUrl $token $name
