@@ -19,5 +19,5 @@ rancher_update_serverurl() {
     -d '{
           "value": "'"$rancherUrl"'"
         }' \
-    "$rancherUrl/v3/settings/server-url" > /dev/null
+    "$rancherUrl/v3/settings/server-url"
 }
