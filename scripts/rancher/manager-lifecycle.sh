@@ -9,9 +9,9 @@
 #   Hostname
 #   Cluster issuer name (managed by cert-manager)
 # Examples:
-#   install_rancher_externalclusterissuer latest "2.8.2" 1 rancher.random_string.geek letsencrypt-prod
+#   rancher_install_withcertmanagerclusterissuer latest "2.8.2" 1 rancher.random_string.geek letsencrypt-prod
 #######################################
-install_rancher_certmanagerclusterissuer() {
+rancher_install_withcertmanagerclusterissuer() {
   local repository=$1
   local version=$2
   local replicas=$3
@@ -40,17 +40,39 @@ install_rancher_certmanagerclusterissuer() {
 #   Rancher URL (starting with http:// or https://)
 #   new password
 # Examples:
-#   do_rancher_first_login MyNewPassword
+#   rancher_first_login MyNewPassword
 #######################################
-do_rancher_first_login() {
+rancher_first_login() {
   local rancherUrl=$1
   local newPassword=$2
 
   echo "Do first login on Rancher..."
   BOOTSTRAP_PASSWORD=$(kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{.data.bootstrapPassword|base64decode}}{{ "\n" }}')
   echo "DEBUG BOOTSTRAP_PASSWORD=${BOOTSTRAP_PASSWORD}"
-  rancher_login_userpwd $rancherUrl 'admin' $BOOTSTRAP_PASSWORD
+  rancher_login_withpassword $rancherUrl 'admin' $BOOTSTRAP_PASSWORD
   echo "DEBUG LOGIN_TOKEN=${LOGIN_TOKEN}"
-  rancher_update_userpwd $rancherUrl $LOGIN_TOKEN $BOOTSTRAP_PASSWORD $newPassword
+  rancher_update_password $rancherUrl $LOGIN_TOKEN $BOOTSTRAP_PASSWORD $newPassword
   rancher_update_serverurl $rancherUrl $LOGIN_TOKEN
+}
+
+#######################################
+# Waits for Rancher CAPI to be ready (for cluster creation in particular)
+# Arguments:
+#   None
+# Examples:
+#   rancher_wait_capiready
+#######################################
+rancher_wait_capiready() {
+  while true; do
+    status=$(kubectl get deployment capi-controller-manager -n cattle-provisioning-capi-system -o jsonpath='{.status.conditions[?(@.type=="Available")].status}' 2>/dev/null)
+    if [ "$status" == "True" ]; then
+      echo "Deployment capi-controller-manager is available"
+      break
+    fi
+    sleep 10
+  done
+  while [[ $(kubectl get endpoints capi-webhook-service -n cattle-provisioning-capi-system -o jsonpath='{.subsets}' 2>/dev/null) == "" ]]; do
+    sleep 10
+  done
+  echo "Service capi-webhook-service is ready"
 }

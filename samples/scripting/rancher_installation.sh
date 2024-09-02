@@ -19,16 +19,29 @@ INGRESS_CLASSNAME='traefik'
 DOWNSTREAM_CLUSTER_NAME='demo'
 RKE2_K8S_VERSION='v1.27.16+rke2r1'
 
-# generic flow
-create_k3s_cluster $K3S_VERSION
-copy_k3s_kubeconfig
-wait_for_cluster_availability
+# create management cluster
+k3s_create_cluster $K3S_VERSION
+k3s_copy_kubeconfig
+k8s_wait_fornodesandpods
 kubectl get nodes
 kubectl get pods -A
-install_certmanager $CERTMANAGER_VERSION
-create_clusterissuers_letsencrypt $INGRESS_CLASSNAME $LETSENCRYPT_EMAIL_ADDRESS
+k8s_install_certmanager $CERTMANAGER_VERSION
+k8s_create_letsencryptclusterissuer $INGRESS_CLASSNAME $LETSENCRYPT_EMAIL_ADDRESS
 kubectl get clusterissuers
-install_rancher_certmanagerclusterissuer $RANCHER_REPOSITORY $RANCHER_VERSION $RANCHER_REPLICAS $RANCHER_DOMAIN letsencrypt-prod
+
+# install and initialize Rancher
+rancher_install_withcertmanagerclusterissuer $RANCHER_REPOSITORY $RANCHER_VERSION $RANCHER_REPLICAS $RANCHER_DOMAIN letsencrypt-prod
 RANCHER_URL="https://${RANCHER_DOMAIN}"
-do_rancher_first_login $RANCHER_URL $ADMIN_PASSWORD
-# TODO
+rancher_first_login $RANCHER_URL $ADMIN_PASSWORD
+rancher_create_apikey $RANCHER_URL $LOGIN_TOKEN 'Automation API Key'
+echo "DEBUG API_TOKEN=${API_TOKEN}"
+rancher_list_clusters $RANCHER_URL $API_TOKEN
+rancher_wait_capiready
+
+# creates downstream cluster
+rancher_create_customcluster $RANCHER_URL $API_TOKEN $DOWNSTREAM_CLUSTER_NAME $RKE2_K8S_VERSION
+rancher_get_clusterregistrationcommand $RANCHER_URL $API_TOKEN $CLUSTER_ID
+
+# executes the registration from downstream server
+echo "Registering downstream cluster (RKE2)..."
+ssh -o StrictHostKeyChecking=accept-new downstream1 "${REGISTRATION_COMMAND} --etcd --controlplane --worker"

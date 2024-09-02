@@ -1,13 +1,13 @@
 # Collection of functions to add query status on a Kubernetes cluster
 
 #######################################
-# Wait for the K3s cluster to be available (checking nodes and pods)
+# Wait for the Kubernetes cluster to be available (checking nodes and pods)
 # Arguments:
 #   None
 # Examples:
-#   wait_for_cluster_availability
+#   k8s_wait_fornodesandpods
 #######################################
-wait_for_cluster_availability() {
+k8s_wait_fornodesandpods() {
   # checks nodes are ready
   while ! kubectl get nodes --no-headers 2>/dev/null | grep -q .; do
     echo "Waiting for nodes to be available..."

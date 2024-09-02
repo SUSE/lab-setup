@@ -5,9 +5,9 @@
 # Arguments:
 #   cert-manager version
 # Examples:
-#   install_certmanager "v1.11.0"
+#   k8s_install_certmanager "v1.11.0"
 #######################################
-install_certmanager() {
+k8s_install_certmanager() {
   local version=$1
 
   echo "Installing cert-manager..."
@@ -27,9 +27,9 @@ install_certmanager() {
 #   Ingress class name (traefik, nginx, etc.)
 #   administrator email address (to receive notifications for Let's Encrypt)
 # Examples:
-#   create_clusterissuers_letsencrypt traefik john.wick@google.com
+#   k8s_create_letsencryptclusterissuer traefik john.wick@google.com
 #######################################
-create_clusterissuers_letsencrypt() {
+k8s_create_letsencryptclusterissuer() {
   local ingressClassname=$1
   local emailAddress=$2
 
