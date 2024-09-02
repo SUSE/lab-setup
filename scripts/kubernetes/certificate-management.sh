@@ -14,8 +14,11 @@ install_certmanager() {
   helm repo add jetstack https://charts.jetstack.io
   helm repo update
   kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/${version}/cert-manager.crds.yaml
-  helm upgrade --install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version ${version}
-  kubectl wait pods -n cert-manager -l app.kubernetes.io/instance=cert-manager --for condition=Ready
+  helm upgrade --install cert-manager jetstack/cert-manager \
+    --namespace cert-manager --create-namespace \
+    --version ${version} \
+    2>/dev/null
+  kubectl wait pods -n cert-manager -l app.kubernetes.io/instance=cert-manager --for condition=Ready 2>/dev/null
 }
 
 #######################################
@@ -35,5 +38,9 @@ create_clusterissuers_letsencrypt() {
   helm repo update
   helm upgrade --install letsencrypt devpro/letsencrypt --namespace cert-manager \
     --set ingress.className=${ingressClassname} \
-    --set registration.emailAddress=${emailAddress}
+    --set registration.emailAddress=${emailAddress} \
+    2>/dev/null
+  while kubectl get clusterissuers -o json | jq -e '.items[] | select(.status.conditions[] | select(.type == "Ready" and .status != "True"))' > /dev/null; do
+    sleep 1
+  done
 }
