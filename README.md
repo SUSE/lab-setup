@@ -26,7 +26,7 @@ curl -sfL https://raw.githubusercontent.com/SUSE/lab-setup/feature/init-solution
 k3s_create_cluster v1.23
 ```
 
-* Look at concrete sample:
+* Look at a concrete sample:
 
   * [samples/scripting/rancher_installation.sh](samples/scripting/rancher_installation.sh)
 
