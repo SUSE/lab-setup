@@ -11,7 +11,7 @@
 # Examples:
 #   install_rancher_externalclusterissuer latest "2.8.2" 1 rancher.random_string.geek letsencrypt-prod
 #######################################
-install_rancher_externalclusterissuer() {
+install_rancher_certmanagerclusterissuer() {
   local repository=$1
   local version=$2
   local replicas=$3
