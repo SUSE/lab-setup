@@ -22,7 +22,7 @@ jobs:
         with:
           globs: '**/*.md'
       - name: Installs packages
-        run: apt install shellcheck
+        run: sudo apt install shellcheck
       - name: Checks shell file code
         run:
           shellcheck scripts/**/*.sh
