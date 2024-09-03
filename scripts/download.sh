@@ -38,6 +38,9 @@ verify_system() {
       return
   fi
   fatal 'Git is not installed in the machine'
+  if ! command -v jq &> /dev/null; then
+    fatal 'jq is not installed in the machine'
+  fi
 }
 
 setup_env() {
