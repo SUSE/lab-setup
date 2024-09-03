@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Collection of functions to add query status on a Kubernetes cluster
 
 #######################################
