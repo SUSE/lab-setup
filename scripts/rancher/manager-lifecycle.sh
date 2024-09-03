@@ -28,7 +28,8 @@ rancher_install_withcertmanagerclusterissuer() {
     --set hostname=${hostname} \
     --set ingress.extraAnnotations.'cert-manager\.io/cluster-issuer'=${clusterissuer} \
     --set ingress.tls.source=secret \
-    --set ingress.tls.secretName=rancher-tls
+    --set ingress.tls.secretName=rancher-tls \
+    --set agentTLSMode="system-store"
   kubectl wait pods -n cattle-system -l app=rancher --for condition=Ready --timeout=180s
   echo "Waiting for Rancher web app to be running with a valid certificate..."
   while ! kubectl get secret rancher-tls --namespace cattle-system 2>/dev/null; do sleep 1; done
