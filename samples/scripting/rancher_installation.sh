@@ -43,5 +43,5 @@ rancher_create_customcluster $RANCHER_URL $API_TOKEN $DOWNSTREAM_CLUSTER_NAME $R
 rancher_get_clusterregistrationcommand $RANCHER_URL $API_TOKEN $CLUSTER_ID
 
 # executes the registration from downstream server
-echo "Registering downstream cluster (RKE2)..."
+echo 'Registering downstream cluster (RKE2)...'
 ssh -o StrictHostKeyChecking=accept-new downstream1 "${REGISTRATION_COMMAND} --etcd --controlplane --worker"

@@ -50,9 +50,9 @@ rancher_update_password() {
     -H 'Content-Type: application/json' \
     -X POST \
     -d '{
-          "currentPassword": "'"$currentPassword"'",
-          "newPassword": "'"$newPassword"'"
-        }' \
+      "currentPassword": "'"$currentPassword"'",
+      "newPassword": "'"$newPassword"'"
+    }' \
     "$rancherUrl/v3/users?action=changepassword"
 }
 
@@ -76,11 +76,11 @@ rancher_create_apikey() {
   API_KEY_RESPONSE=$(curl -s -k "$rancherUrl/v3/tokens" \
     -H 'Content-Type: application/json' \
     -H "Authorization: Bearer $token" \
-    --data-binary "{
+    --data-binary '{
       "type": "token",
-      "description": "$description",
+      "description": "'"$description"'",
       "ttl": 0
-    }")
+    }')
   echo "DEBUG API_KEY_RESPONSE=${API_KEY_RESPONSE}"
   API_TOKEN=$(echo $API_KEY_RESPONSE | jq -r .token)
   sleep 5

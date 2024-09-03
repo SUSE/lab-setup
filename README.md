@@ -8,7 +8,7 @@ It is used internally at SUSE (the goal being to capitalize and factorize), but 
 
 ## Getting started
 
-### Shell scripting
+### Bash scripting
 
 * Download and source the files (here targetting `develop` branch but you can chose the revision you want):
 
