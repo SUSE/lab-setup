@@ -34,6 +34,7 @@ k8s_create_letsencryptclusterissuer() {
   local emailAddress=$2
 
   echo "Creating certificate issuers using Let's Encrypt..."
+  # TODO move charts to this repository
   helm repo add devpro https://devpro.github.io/helm-charts
   helm repo update
   helm upgrade --install letsencrypt devpro/letsencrypt --namespace cert-manager \
