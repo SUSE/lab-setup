@@ -26,4 +26,4 @@ jobs:
         run: sudo apt install shellcheck
       - name: Checks shell file code
         run:
-          shellcheck -e SC2148 scripts/**/*.sh
+          shellcheck -e SC2086 scripts/**/*.sh
