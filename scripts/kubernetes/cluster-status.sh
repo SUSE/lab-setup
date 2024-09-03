@@ -1,3 +1,4 @@
+#!/bin/sh
 # Collection of functions to add query status on a Kubernetes cluster
 
 #######################################
@@ -14,7 +15,7 @@ k8s_wait_fornodesandpods() {
     sleep 5
   done
   while true; do
-    NOT_READY_NODES=$(kubectl get nodes --no-headers 2>/dev/null | grep -v " Ready" | wc -l)
+    NOT_READY_NODES=$(kubectl get nodes --no-headers 2>/dev/null | grep -c " Ready")
     if [ "$NOT_READY_NODES" -eq 0 ]; then
       echo "All nodes are ready."
       break

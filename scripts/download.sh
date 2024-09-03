@@ -1,4 +1,5 @@
 #!/bin/sh
+# Script to download a specific version of the scripts from GitHub
 
 # Usage:
 #   curl ... | ENV_VAR=... sh -

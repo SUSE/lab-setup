@@ -1,3 +1,4 @@
+#!/bin/sh
 # Collection of functions to add components to manage certificates in a Kubernetes cluster
 
 #######################################

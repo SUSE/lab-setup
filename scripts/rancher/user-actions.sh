@@ -1,3 +1,4 @@
+#!/bin/sh
 # Collection of functions to make user actions
 
 #######################################
@@ -77,7 +78,7 @@ rancher_create_apikey() {
     -H "Authorization: Bearer $token" \
     --data-binary '{
       "type": "token",
-      "description": "${description}",
+      "description": "$description",
       "ttl": 0
     }')
   echo "DEBUG API_KEY_RESPONSE=${API_KEY_RESPONSE}"

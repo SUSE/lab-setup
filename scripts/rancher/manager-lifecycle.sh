@@ -1,3 +1,4 @@
+#!/bin/sh
 # Collection of functions to manage Rancher lifecycle
 
 #######################################

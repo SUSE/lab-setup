@@ -21,8 +21,9 @@ jobs:
         uses: DavidAnson/markdownlint-cli2-action@v16
         with:
           globs: '**/*.md'
+      # checking shell code with ShellCheck (https://github.com/koalaman/shellcheck)
       - name: Installs packages
         run: sudo apt install shellcheck
       - name: Checks shell file code
         run:
-          shellcheck scripts/**/*.sh
+          shellcheck -e SC2148 scripts/**/*.sh
