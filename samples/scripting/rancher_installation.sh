@@ -9,10 +9,10 @@ curl -sfL https://raw.githubusercontent.com/SUSE/lab-setup/feature/init-solution
 # defines variables
 K3S_VERSION='v1.23'
 CERTMANAGER_VERSION='v1.11.0'
-LETSENCRYPT_EMAIL_ADDRESS='john.wick@google.com'
+LETSENCRYPT_EMAIL_ADDRESS='john.wick@thecontinental.hotel'
 RANCHER_REPOSITORY='latest'
 RANCHER_VERSION='2.8.2'
-RANCHER_DOMAIN="rancher.${HOSTNAME}.${_SANDBOX_ID}.instruqt.io"
+RANCHER_DOMAIN="rancher.awesome.com"
 RANCHER_REPLICAS='1'
 ADMIN_PASSWORD='Sus3R@ncherR0x'
 INGRESS_CLASSNAME='traefik'
