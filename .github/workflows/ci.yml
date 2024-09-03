@@ -12,7 +12,7 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  build:
+  code-check:
     runs-on: ubuntu-latest
     steps:
       - name: Checks-out the repository
@@ -21,3 +21,8 @@ jobs:
         uses: DavidAnson/markdownlint-cli2-action@v16
         with:
           globs: '**/*.md'
+      - name: Installs packages
+        run: apt install shellcheck
+      - name: Checks shell file code
+        run:
+          shellcheck scripts/**/*.sh
