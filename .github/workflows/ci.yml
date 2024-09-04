@@ -49,7 +49,7 @@ jobs:
           python-version: '3.x'
           check-latest: true
       - name: Install Helm chart-testing
-        uses: helm/chart-testing-action@v2.7.0
+        uses: helm/chart-testing-action@v2.6.1
       - name: List changed Helm charts
         id: list-changed
         run: |
