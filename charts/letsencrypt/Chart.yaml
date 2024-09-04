@@ -2,8 +2,9 @@ apiVersion: v2
 name: letsencrypt
 description: Helm chart for managing Let's Encrypt
 type: application
-version: "0.1.2"
+version: 0.1.0
 appVersion: "1.0.0"
+home: https://github.com/SUSE/lab-setup/tree/main/charts/letsencrypt
 maintainers:
   - name: devpro
-    email: bertrand@devpro.fr
+    email: bertrand.thomas@suse.com
