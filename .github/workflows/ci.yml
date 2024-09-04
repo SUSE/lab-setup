@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - develop
   pull_request:
     branches:
       - develop
@@ -11,19 +12,51 @@ on:
     - cron: "0 2 * * 1-5"
   workflow_dispatch: {}
 
+concurrency:
+  group: "${{ github.ref }}-${{ github.workflow }}"
+  cancel-in-progress: true
+
 jobs:
   code-check:
     runs-on: ubuntu-latest
     steps:
-      - name: Checks-out the repository
+      - name: Check-out the repository
         uses: actions/checkout@v4
-      - name: Lints Markdown files
+        with:
+          # gets all history for all branches and tags (mandatory for chart-testing to work, see https://github.com/helm/chart-testing/issues/186)
+          fetch-depth: 0
+      - name: Lint Markdown files
         uses: DavidAnson/markdownlint-cli2-action@v16
         with:
           globs: '**/*.md'
-      # checking shell code with ShellCheck (https://github.com/koalaman/shellcheck)
-      - name: Installs packages
+      # uses https://github.com/koalaman/shellcheck
+      - name: Install Shellcheck
         run: sudo apt install shellcheck
-      - name: Checks shell file code
+      - name: Check shell file code
         run:
           shellcheck -e SC2086 -e SC2034 scripts/**/*.sh
+      - name: Install Helm
+        uses: azure/setup-helm@v4.2.0
+        with:
+          version: v3.14.0
+      - name: Add dependency Helm chart repositories
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo update
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+          check-latest: true
+      - name: Install Helm chart-testing
+        uses: helm/chart-testing-action@v2.7.0
+      - name: List changed Helm charts
+        id: list-changed
+        run: |
+          changed=$(ct list-changed --chart-dirs charts --target-branch ${{ github.event.repository.default_branch }})
+          if [[ -n "$changed" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Run chart-testing (lint)
+        if: steps.list-changed.outputs.changed == 'true'
+        run: ct lint --chart-dirs charts --target-branch ${{ github.event.repository.default_branch }}
