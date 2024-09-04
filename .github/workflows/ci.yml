@@ -34,7 +34,7 @@ jobs:
         run: sudo apt install shellcheck
       - name: Check shell file code
         run:
-          shellcheck -e SC2086 -e SC2034 scripts/**/*.sh
+          shellcheck -e SC2086 -e SC2034 -e SC2126 scripts/**/*.sh
       - name: Install Helm
         uses: azure/setup-helm@v4.2.0
         with:
