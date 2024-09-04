@@ -2,30 +2,44 @@
 
 [![CI](https://github.com/SUSE/lab-setup/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/SUSE/lab-setup/actions/workflows/ci.yml)
 
-Welcome! You'll find in this repository some IT material to help setup your lab environments.
+Welcome! You'll find in this repository good open-source stuff to setup a lab environment.
 
 It is used internally at SUSE (the goal being to capitalize and factorize), but is open to everyone. Feel free to contribute and share feedback!
 
 ## Getting started
 
+Wether you're looking for simple way to automate an infrastructure or running demo workload, we've got you covered!
+
 ### Bash scripting
 
-* Download and source the files (here targetting `develop` branch but you can chose the revision you want):
+Download and source the files (targetting `develop` branch):
 
 ```bash
-SETUP_FOLDER=lab-setup
-curl -sfL https://raw.githubusercontent.com/SUSE/lab-setup/feature/init-solution/scripts/download.sh \
-  | GIT_REVISION=refs/heads/develop sh -s -- -o $SETUP_FOLDER
-. $SETUP_FOLDER/scripts/index.sh
+curl -sfL https://raw.githubusercontent.com/SUSE/lab-setup/feature/init-solution/scripts/download.sh | GIT_REVISION=refs/heads/develop sh -s -- -o temp
+. temp/scripts/index.sh
 ```
 
-* Try some functions:
+Call a function:
 
 ```bash
-# create a Kubernetes cluster (K3s distribution)
 k3s_create_cluster v1.23
 ```
 
-* Look at concrete examples: [Rancher installation with downstream cluster](samples/scripting/rancher_installation.sh)
+Browse the [catalog of functions](scripts/README.md#shell-functions) and [concrete examples](scripts/README.md#concrete-examples).
 
-* Browse the [catalog of functions](scripts/README.md#shell-functions)
+### Helm charts
+
+Add Helm repository:
+
+```bash
+helm repo add suse-lab-setup https://suse.github.io/lab-setup
+helm repo update
+```
+
+Deploy a chart:
+
+```bash
+helm upgrade --install cow-demo suse-lab-setup/cow-demo --namespace demo
+```
+
+Browse the [catalog of Helm charts](charts/README.md).

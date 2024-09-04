@@ -20,3 +20,7 @@ Name                                           | Source
 `rancher_update_password`                      | [scripts/rancher/user-actions.sh](scripts/rancher/user-actions.sh)
 `rancher_update_serverurl`                     | [scripts/rancher/manager-settings.sh](scripts/rancher/manager-settings.sh)
 `rancher_wait_capiready`                       | [scripts/rancher/manager-lifecycle.sh](scripts/rancher/manager-lifecycle.sh)
+
+## Concrete examples
+
+- [Rancher installation with downstream cluster](../samples/scripting/rancher_installation.sh)

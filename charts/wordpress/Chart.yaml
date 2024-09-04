@@ -1,0 +1,13 @@
+apiVersion: v2
+name: wordpress
+description: Helm chart for managing WordPress
+type: application
+version: "0.2.0"
+appVersion: "6.4.3"
+dependencies:
+  - name: wordpress
+    version: 19.2.5
+    repository: https://charts.bitnami.com/bitnami
+maintainers:
+  - name: devpro
+    email: bertrand@devpro.fr
