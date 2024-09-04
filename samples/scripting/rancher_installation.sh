@@ -2,8 +2,8 @@
 
 # downloads and sources shared scripts
 SETUP_FOLDER=temp
-curl -sfL https://raw.githubusercontent.com/SUSE/lab-setup/feature/init-solution/scripts/download.sh \
-  | GIT_REVISION=refs/heads/feature/init-solution sh -s -- -o $SETUP_FOLDER
+curl -sfL https://raw.githubusercontent.com/SUSE/lab-setup/develop/scripts/download.sh \
+  | GIT_REVISION=refs/heads/develop sh -s -- -o $SETUP_FOLDER
 . $SETUP_FOLDER/scripts/index.sh
 
 # defines variables
