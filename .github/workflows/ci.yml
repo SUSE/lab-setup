@@ -32,9 +32,9 @@ jobs:
       id: filter
       with:
         filters: |
-          game-2048: src/game-2048
-          cow-demo: src/cow-demo
-          rancher-helloworld: src/rancher-helloworld
+          game-2048: src/game-2048/**
+          cow-demo: src/cow-demo/**
+          rancher-helloworld: src/rancher-helloworld/**
   code-check:
     runs-on: ubuntu-latest
     steps:
