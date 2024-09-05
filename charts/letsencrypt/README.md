@@ -10,11 +10,11 @@ Install the app with minimal settings:
 
 ```bash
 # adds the repo
-helm repo add devpro https://devpro.github.io/helm-charts
+helm repo add suse-lab-setup https://opensource.suse.com/lab-setup
 helm repo update
 
 # installs the chart (this examples assumes NGINX Ingress Controller is installed)
-helm upgrade --install letsencrypt devpro/letsencrypt \
+helm upgrade --install letsencrypt suse-lab-setup/letsencrypt \
   --namespace cert-manager \
   --set registration.emailAddress=someuser@domain.com \
   --set ingress.className=nginx

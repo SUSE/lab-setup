@@ -32,7 +32,7 @@ Browse the [catalog of functions](scripts/README.md#shell-functions) and [concre
 Add Helm repository:
 
 ```bash
-helm repo add suse-lab-setup https://suse.github.io/lab-setup
+helm repo add suse-lab-setup https://opensource.suse.com/lab-setup
 helm repo update
 ```
 
