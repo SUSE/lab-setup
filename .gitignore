@@ -6,3 +6,4 @@ temp*.yaml
 temp.sh
 /charts/temp/
 values_mine.y*ml
+.sass-cache/
