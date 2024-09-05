@@ -6,7 +6,7 @@
 #######################################
 rancher_list_clusters() {
   echo "Listing clusters registered in Rancher..."
-  kubectl get clusters.provisioning.cattle.io --all-namespaces | awk 'NR>1 {print $2}'
+  kubectl get clusters.provisioning.cattle.io --all-namespaces -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
 }
 
 #######################################
