@@ -4,7 +4,7 @@
 
 Welcome! You'll find in this repository some open-source material to setup a lab environment.
 
-It is used internally at SUSE (the goal being to capitalize and factorize), but is open to everyone. Feel free to contribute and share feedback!
+It is used internally at SUSE but is open to everyone. Feel free to [contribute](CONTRIBUTING.md) and share feedback!
 
 ## Getting started
 

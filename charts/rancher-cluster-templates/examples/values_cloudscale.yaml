@@ -1,0 +1,15 @@
+cluster:
+  name: CLUSTER_NAME
+
+cloudprovider: cloudscale
+
+cloudCredentialSecretName: CLOUD_CREDENTIAL_SECRET
+
+nodepools:
+  - etcd: true
+    controlplane: true
+    worker: true
+    labels: {}
+    quantity: 1
+    paused: false
+    name: nodepool-1
