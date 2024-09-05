@@ -1,0 +1,67 @@
+apiVersion: v1
+entries:
+  cow-demo:
+  - apiVersion: v2
+    appVersion: 2.0.0
+    created: "2024-09-05T06:55:37.687939751Z"
+    description: Helm chart for Cow Demo Application
+    digest: 4fc2d0c02bb77440e66c61dba9f6a8cfb8ee90e3b847032d55bb9e61ca0c498c
+    home: https://github.com/SUSE/lab-setup/tree/main/charts/cow-demo
+    maintainers:
+    - email: bertrand.thomas@suse.com
+      name: devpro
+    name: cow-demo
+    type: application
+    urls:
+    - https://github.com/SUSE/lab-setup/releases/download/cow-demo-0.1.0/cow-demo-0.1.0.tgz
+    version: 0.1.0
+  game-2048:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2024-09-05T06:55:37.871171355Z"
+    description: Helm chart for Game 2048
+    digest: 06520134e03a8e64452d93e26f73659fa4f25d3c2381a8aab6dcf28a8c8ccf99
+    home: https://github.com/SUSE/lab-setup/tree/main/charts/game-2048
+    maintainers:
+    - email: bertrand.thomas@suse.com
+      name: devpro
+    name: game-2048
+    type: application
+    urls:
+    - https://github.com/SUSE/lab-setup/releases/download/game-2048-0.1.0/game-2048-0.1.0.tgz
+    version: 0.1.0
+  letsencrypt:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2024-09-05T06:55:38.042839378Z"
+    description: Helm chart for managing Let's Encrypt
+    digest: dea71aa94ed1839ad78f84a370de85c1fa796a71f43b61d8e802942a4ae22cf7
+    home: https://github.com/SUSE/lab-setup/tree/main/charts/letsencrypt
+    maintainers:
+    - email: bertrand.thomas@suse.com
+      name: devpro
+    name: letsencrypt
+    type: application
+    urls:
+    - https://github.com/SUSE/lab-setup/releases/download/letsencrypt-0.1.0/letsencrypt-0.1.0.tgz
+    version: 0.1.0
+  wordpress:
+  - apiVersion: v2
+    appVersion: 6.4.3
+    created: "2024-09-05T06:55:38.264475071Z"
+    dependencies:
+    - name: wordpress
+      repository: https://charts.bitnami.com/bitnami
+      version: 19.2.5
+    description: Helm chart for managing WordPress
+    digest: e7b22d28ab2ac4563438d8b3d9ef140de3596c43afa4c6cb9cb4b9e240256334
+    home: https://github.com/SUSE/lab-setup/tree/main/charts/wordpress
+    maintainers:
+    - email: bertrand.thomas@suse.com
+      name: devpro
+    name: wordpress
+    type: application
+    urls:
+    - https://github.com/SUSE/lab-setup/releases/download/wordpress-0.1.0/wordpress-0.1.0.tgz
+    version: 0.1.0
+generated: "2024-09-05T06:55:38.264484538Z"
