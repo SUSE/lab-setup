@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Devpro Helm Charts</title>
+    <title>SUSE Lab Setup Helm Charts</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.10.0/github-markdown.min.css" />
@@ -66,9 +66,9 @@
   <body>
 
     <section class="markdown-body">
-      <h1>Devpro Helm Charts</h1>
+      <h1>SUSE Lab Setup Helm Charts</h1>
       <h2>Usage</h2>
-      <pre class="snippet" lang="no-highlight"><code>helm repo add devpro https://devpro.github.io/helm-charts</code></pre>
+      <pre class="snippet" lang="no-highlight"><code>helm repo add suse-lab-setup https://opensource.suse.com/lab-setup</code></pre>
       <p>This repository contains Helm charts to build clusters with all components running in containers.</p>
       <h2>Charts</h2>
       <div class="charts">
