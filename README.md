@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/SUSE/lab-setup/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/SUSE/lab-setup/actions/workflows/ci.yml)
 
-Welcome! You'll find in this repository good open-source stuff to setup a lab environment.
+Welcome! You'll find in this repository some open-source material to setup a lab environment.
 
 It is used internally at SUSE (the goal being to capitalize and factorize), but is open to everyone. Feel free to contribute and share feedback!
 
