@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>{{ .Title }}</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+        <meta name="author" content="SUSE Rancher" />
+        <meta name="description" content="Cow Demo" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="static/dist/semantic.min.css" />
+        <link rel="stylesheet" type="text/css" href="static/css/default.css" />
+        <script src="static/dist/semantic.min.js"></script>
+
+        <script type="text/javascript">
+            var containers = [];
+            var lastSeen = {};
+            var colors = new Object;
+            var refreshInterval = Number({{ .RefreshInterval }});
+
+            function getPetsAsset(pets) {
+                var asset;
+                switch (pets) {
+					case "cows":
+                  		asset = "static/img/rancher-logo-cow-blue.png"
+                  		break;
+                	case "chameleons":
+                  		asset = "static/img/suse-logo-chameleon-green.png"
+                  		break;
+                	case "cowmeleons":
+                  		asset = "static/img/suse-rancher-cowmeleon.png"
+                  		break;
+                	default:
+						asset = "static/img/rancher-logo-cow-blue.png"
+				}
+				return asset;
+			}
+
+            function getColor(containerColor) {
+                var allColors = [
+                    "red",
+                    "orange",
+                    "yellow",
+                    "olive",
+                    "green",
+                    "teal",
+                    "blue",
+                    "violet",
+                    "purple",
+                    "pink"
+                ]
+
+                color = allColors[Math.floor(Math.random()*allColors.length)];
+
+                if (color != containerColor) {
+                    return color;
+                } else {
+                    return getColor(containerColor);
+                }
+            }
+
+            function reload() {
+                var ts = new Date().getTime();
+                var expireInterval = Number({{ .ExpireInterval }});
+                var removeInterval = Number({{ .RemoveInterval }});
+
+                $.ajax({
+                     url: "/demo?" + ts,
+                     dataType: "json",
+                     cache: false,
+                     beforeSend: function (request) {},
+                     error: function() {
+                         {{ if not .SkipErrors }}
+                         $("#requests-error-count").text(parseInt($("#requests-error-count").text()) + 1);
+                         $(".error").addClass("red");
+                         {{ end }}
+                     },
+                     success: function(data){
+                         if (! (colors.hasOwnProperty(data.version))) {
+                             colors[data.version] = getColor(data.containerColor);
+                         }
+                         var color = colors[data.version];
+                         if ($.inArray(data.instance, containers) == -1) {
+                             containers.push(data.instance);
+                         }
+
+                         var containerColor = data.containerColor;
+						 var petsAsset = getPetsAsset(data.pets);
+
+                         // add timestamp for when we last saw this container
+                         lastSeen[data.instance] = ts;
+
+                         for (var i=0; i<containers.length; i++) {
+                            var instanceName = containers[i];
+                            var el = $("#instance-" + instanceName);
+                            if (el.length == 0) {
+                                console.log("creating instance " + instanceName);
+
+                                // create a shorter display name for the tile
+                                var displayName = instanceName.match(/.+-(\w+)$/);
+                                if (!displayName) {
+                                    displayName = instanceName;
+                                } else {
+                                  displayName = displayName[1];
+                                }
+                                var elData = '<div id="instance-' + instanceName + '" class="card container-instance"><div class="image" id="replica" style="background-color: ' + containerColor + ';"><img width="25%" height="25%" src="' + petsAsset + '"></div><div class="content centered view-computer"><div> {{ if .ShowVersion }}<div class="ui top left attached ' + color + ' label">' + data.version +'</div>{{ end }} <div id="instance-label-' + instanceName + '"class="ui top right attached green serving label">serving</div>' + displayName + '</div></div></div>';
+
+                                $("div.container-group").append(elData);
+                                el = $("#instance-" + instanceName);
+                            }
+
+                            if (ts - lastSeen[instanceName] > refreshInterval) {
+                                // expire old instances
+                                var opacity = (1 - (ts - lastSeen[instanceName]) / 1000 / expireInterval).toFixed(2);
+
+                                if ((ts - lastSeen[instanceName]) / 1000 > expireInterval + removeInterval) {
+                                    console.log("removing instance " + instanceName);
+                                    el.remove();
+                                    containers.splice(i, 1);
+                                    delete lastSeen[instanceName];
+                                } else if (opacity >= 0.2) {
+                                    $("#instance-" + instanceName).css('opacity', opacity);
+                                }
+                            } else {
+                                // clear any previously-set opacity
+                                $("#instance-" + instanceName).css('opacity', '');
+                            }
+
+                            // show which replica is active
+                            var lbl = $("#instance-label-" + instanceName);
+                            if (instanceName == data.instance) {
+                                $(lbl).fadeIn(250);
+                            } else {
+                                $(lbl).fadeOut(250);
+                            }
+                         }
+
+                         $("#container-count").text(containers.length);
+                         if (containers.length > 1) {
+                             $("#container-count-label").text("replicas");
+                         } else {
+                             $("#container-count-label").text("replica");
+                         }
+
+                         $("#current-container").text(data.instance);
+                         $("#current-container-version").text(data.version);
+                         $("#container-backend").removeClass('hide');
+                         $("div.container-backend").show();
+                         $("#extra-info").text(data.metadata);
+
+                         $("#requests-count").text(parseInt($("#requests-count").text()) + 1);
+                     }
+                });
+            }
+
+            setInterval(reload, refreshInterval);
+        </script>
+    </head>
+    <body>
+        <div class="ui two column relaxed doubling padded grid">
+            <div class="six wide column meta">
+                <div class="ui container">
+                    Inspired by <a href="https://github.com/ehazlett/docker-demo" target="_blank">ehazlett/docker-demo</a>
+                    <img class="logo center" src="static/img/rancher-logo-stacked-white.png"/>
+
+                    <div class="row centered">
+                        <div class="ui huge statistic">
+                            <div id="container-count" class="value"></div>
+                            <div id="container-count-label" class="label"></div>
+                        </div>
+                    </div>
+                    <div class="row centered container-backend hide">
+                        <div class="ui statistic">
+                            <div id="current-container" class="value"></div>
+                            <div class="label">current backend</div>
+                        </div>
+                    </div>
+
+                    {{ if .ShowVersion }}
+                    <div class="row centered container-backend hide">
+                        <div class="ui large statistic">
+                            <div id="current-container-version" class="value"></div>
+                            <div class="label">current version</div>
+                        </div>
+                    </div>
+                    {{ end }}
+
+                    <div class="row centered request-counter">
+                        <div class="ui two statistics">
+                            <div class="ui huge statistic">
+                                <div id="requests-count" class="value">0</div>
+                                <div class="label">requests</div>
+                            </div>
+                            <div class="ui huge statistic error">
+                                <div id="requests-error-count" class="value">0</div>
+                                <div class="label">errors</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{ if ne .Metadata "" }}
+                    <div class="row centered extra-info">
+                        {{ .Metadata }}
+                    </div>
+                    {{ end }}
+                </div>
+            </div>
+            <div class="ten wide column">
+                <div class="ui padded raised segment containers">
+                    <div class="ui six cards doubling container-group">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

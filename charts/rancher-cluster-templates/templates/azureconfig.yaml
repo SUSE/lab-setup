@@ -1,0 +1,58 @@
+{{- if eq .Values.cloudprovider "azure" }}
+{{- range $index, $nodepool := .Values.nodepools }}
+---
+apiVersion: rke-machine-config.cattle.io/v1
+kind: AzureConfig
+metadata:
+  name: {{ $nodepool.name }}
+  namespace: fleet-default
+  {{- if $nodepool.annotations }}
+  annotations:
+    {{- toYaml $nodepool.annotations | indent 4 }}
+  {{- end }}
+  {{- if $nodepool.labels }}
+  labels:
+    {{- toYaml $nodepool.labels | indent 4 }}
+  {{- end }}
+availabilitySet: {{ default (printf "avs-%s" $.Values.cluster.name) $nodepool.availabilitySet }}
+# clientId: string
+# clientSecret: string
+{{- if $nodepool.customData }}
+customData: {{ $nodepool.customData }}
+{{- end }}
+diskSize: "{{ default "30" $nodepool.diskSize }}"
+{{- if $nodepool.dns }}
+dns: {{ $nodepool.dns }}
+{{- end }}
+dockerPort: "{{ default "2376" $nodepool.dockerPort }}"
+environment: {{ default "AzurePublicCloud" $nodepool.azureEnvironment }}
+faultDomainCount: "{{ default "3" $nodepool.faultDomainCount }}"
+image: {{ $nodepool.machineImage }}
+location: {{ $nodepool.region }}
+managedDisks: {{ default "true" $nodepool.managedDisks }}
+noPublicIp: {{ default "false" $nodepool.noPublicIp }}
+nsg: {{ $nodepool.networkSecurityGroup }}
+{{- if $nodepool.openPorts}}
+openPort:
+  {{- range $i, $port := $nodepool.openPorts }}
+  - {{ $port }}
+  {{- end }}
+{{- end }}
+# plan: string
+{{- if $nodepool.privateIpAddress }}
+privateIpAddress: {{ $nodepool.privateIpAddress }}
+{{- end }}
+resourceGroup: {{ $nodepool.resourceGroup }}
+size: {{ $nodepool.instanceType }}
+sshUser: {{ default "azureuser" $nodepool.sshUser }}
+staticPublicIp: {{ default "false" $nodepool.staticPublicIp }}
+storageType: {{ $nodepool.storageType }}
+subnet: {{ $nodepool.subnet }}
+subnetPrefix: {{ default "192.168.0.0/16" $nodepool.subnetPrefix }}
+# subscriptionId: string
+# tenantId: string
+updateDomainCount: "{{ default "5" $nodepool.updateDomainCount }}"
+usePrivateIp: {{ default "false" $nodepool.usePrivateIp }}
+vnet: {{ $nodepool.virtualNetwork }}
+{{- end }}
+{{- end }}

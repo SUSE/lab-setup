@@ -1,0 +1,115 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - develop
+  schedule:
+    - cron: "0 2 * * 1-5"
+  workflow_dispatch: {}
+
+concurrency:
+  group: "${{ github.ref }}-${{ github.workflow }}"
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      apps: ${{ steps.filter.outputs.changes }}
+    steps:
+      - name: Check-out the repository
+        uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          base: ${{ github.ref }}
+          filters: |
+            game-2048: src/game-2048/**
+            cow-demo: src/cow-demo/**
+            rancher-helloworld: src/rancher-helloworld/**
+  code-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+        with:
+          # gets all history for all branches and tags (mandatory for chart-testing to work, see https://github.com/helm/chart-testing/issues/186)
+          fetch-depth: 0
+      - name: Lint Markdown files
+        uses: DavidAnson/markdownlint-cli2-action@v16
+        with:
+          globs: '**/*.md'
+      # uses https://github.com/koalaman/shellcheck
+      - name: Install Shellcheck
+        run: sudo apt install shellcheck
+      - name: Check shell file code
+        run:
+          shellcheck -e SC2086 -e SC2034 -e SC2126 scripts/**/*.sh
+      - name: Install Helm
+        uses: azure/setup-helm@v4.2.0
+        with:
+          version: v3.14.0
+      - name: Add dependency Helm chart repositories
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo update
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+          check-latest: true
+      - name: Install Helm chart-testing
+        uses: helm/chart-testing-action@v2.6.1
+      - name: List changed Helm charts
+        id: list-changed
+        run: |
+          changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
+          if [[ -n "$changed" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Run chart-testing (lint)
+        if: steps.list-changed.outputs.changed == 'true'
+        run: ct lint --target-branch ${{ github.event.repository.default_branch }}
+  image-scan:
+    needs: changes
+    if: needs.changes.outputs.apps != '[]'
+    strategy:
+      matrix:
+        app: ${{ fromJSON(needs.changes.outputs.apps) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build container image from source
+        run: |
+          cd src/${{ matrix.app }}
+          docker build . --tag $CONTAINER_REGITRY_DOMAIN/$IMAGE_FOLDER/${{ matrix.app }}:${{ env.IMAGE_TAG }}
+      - name: Scan container image with NeuVector
+        if: ${{ vars.USE_NEUVECTOR == 'true' }}
+        uses: neuvector/scan-action@main
+        with:
+          image-repository: ${{ env.CONTAINER_REGITRY_DOMAIN }}/${{ env.IMAGE_FOLDER }}/${{ matrix.app }}
+          image-tag: ${{ env.IMAGE_TAG }}
+          min-high-cves-to-fail: "1"
+          min-medium-cves-to-fail: "1"
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      CONTAINER_REGITRY_DOMAIN: docker.io
+      IMAGE_FOLDER: ${{ vars.DOCKERHUB_NAMESPACE }}
+      IMAGE_TAG: 1.0.${{ github.run_id }}
