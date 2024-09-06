@@ -23,6 +23,7 @@ jobs:
       - uses: dorny/paths-filter@v3
         id: filter
         with:
+          base: ${{ github.ref }}
           filters: |
             game-2048: src/game-2048/**
             cow-demo: src/cow-demo/**
