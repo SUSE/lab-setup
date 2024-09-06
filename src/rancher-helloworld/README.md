@@ -1,6 +1,6 @@
 # Rancher Hello World
 
-[![Docker Image Version](https://img.shields.io/docker/v/devprofr/rancher-helloworld?label=Docker)](https://hub.docker.com/r/devprofr/rancher-helloworld)
+[![Docker Image Version](https://img.shields.io/docker/v/suselabsetup/rancher-helloworld?label=Docker)](https://hub.docker.com/r/suselabsetup/rancher-helloworld)
 
 This is the source code of a web application used for demoing and/or testing. It shows data about hostname, k8s services and request headers.
 

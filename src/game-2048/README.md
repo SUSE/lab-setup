@@ -1,6 +1,6 @@
 # 2048 game
 
-[![Docker Image Version](https://img.shields.io/docker/v/devprofr/game-2048?label=Docker)](https://hub.docker.com/r/devprofr/game-2048)
+[![Docker Image Version](https://img.shields.io/docker/v/suselabsetup/game-2048?label=Docker)](https://hub.docker.com/r/suselabsetup/game-2048)
 
 Let's play 2048 Game web application in a container!
 

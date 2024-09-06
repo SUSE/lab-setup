@@ -18,13 +18,15 @@ jobs:
     outputs:
       apps: ${{ steps.filter.outputs.changes }}
     steps:
-    - uses: dorny/paths-filter@v3
-      id: filter
-      with:
-        filters: |
-          game-2048: src/game-2048/**
-          cow-demo: src/cow-demo/**
-          rancher-helloworld: src/rancher-helloworld/**
+      - name: Check-out the repository
+        uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            game-2048: src/game-2048/**
+            cow-demo: src/cow-demo/**
+            rancher-helloworld: src/rancher-helloworld/**
   build:
     runs-on: ubuntu-latest
     steps:
