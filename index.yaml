@@ -3,6 +3,20 @@ entries:
   cow-demo:
   - apiVersion: v2
     appVersion: 2.0.0
+    created: "2024-09-06T14:46:14.565430075Z"
+    description: Helm chart for Cow Demo Application
+    digest: dd6cb77201abe3774d1f7f67acce92e0857dc33346ef38fd5d204781986aedd6
+    home: https://github.com/SUSE/lab-setup/tree/main/charts/cow-demo
+    maintainers:
+    - email: bertrand.thomas@suse.com
+      name: devpro
+    name: cow-demo
+    type: application
+    urls:
+    - https://github.com/SUSE/lab-setup/releases/download/cow-demo-0.1.1/cow-demo-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 2.0.0
     created: "2024-09-05T06:55:37.687939751Z"
     description: Helm chart for Cow Demo Application
     digest: 4fc2d0c02bb77440e66c61dba9f6a8cfb8ee90e3b847032d55bb9e61ca0c498c
@@ -16,6 +30,20 @@ entries:
     - https://github.com/SUSE/lab-setup/releases/download/cow-demo-0.1.0/cow-demo-0.1.0.tgz
     version: 0.1.0
   game-2048:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2024-09-06T14:46:14.745397464Z"
+    description: Helm chart for Game 2048
+    digest: d306cc4a4547fb9f56528b61c0f3fb9ea356c5480858b0aab30efcf1b8767901
+    home: https://github.com/SUSE/lab-setup/tree/main/charts/game-2048
+    maintainers:
+    - email: bertrand.thomas@suse.com
+      name: devpro
+    name: game-2048
+    type: application
+    urls:
+    - https://github.com/SUSE/lab-setup/releases/download/game-2048-0.1.1/game-2048-0.1.1.tgz
+    version: 0.1.1
   - apiVersion: v2
     appVersion: 1.0.0
     created: "2024-09-05T06:55:37.871171355Z"
@@ -33,6 +61,20 @@ entries:
   letsencrypt:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2024-09-06T14:46:14.917028818Z"
+    description: Helm chart for managing Let's Encrypt
+    digest: 1982db1d3b156c030cc21e380f104bb61572c47cd8049ac58a9c66d4ece11b02
+    home: https://github.com/SUSE/lab-setup/tree/main/charts/letsencrypt
+    maintainers:
+    - email: bertrand.thomas@suse.com
+      name: devpro
+    name: letsencrypt
+    type: application
+    urls:
+    - https://github.com/SUSE/lab-setup/releases/download/letsencrypt-0.1.1/letsencrypt-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2024-09-05T06:55:38.042839378Z"
     description: Helm chart for managing Let's Encrypt
     digest: dea71aa94ed1839ad78f84a370de85c1fa796a71f43b61d8e802942a4ae22cf7
@@ -45,7 +87,58 @@ entries:
     urls:
     - https://github.com/SUSE/lab-setup/releases/download/letsencrypt-0.1.0/letsencrypt-0.1.0.tgz
     version: 0.1.0
+  nfs-ganesha:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2024-09-06T14:46:15.128964184Z"
+    description: Helm chart for managing NFS-Ganesha
+    digest: 1da17cd85d36248b8f13f40961e590e5d20c495794c2582b5c3e41d48ae9cef8
+    home: https://github.com/SUSE/lab-setup/tree/main/charts/nfs-ganesha
+    maintainers:
+    - email: bertrand.thomas@suse.com
+      name: devpro
+    name: nfs-ganesha
+    type: application
+    urls:
+    - https://github.com/SUSE/lab-setup/releases/download/nfs-ganesha-0.1.0/nfs-ganesha-0.1.0.tgz
+    version: 0.1.0
+  rancher-cluster-templates:
+  - annotations:
+      catalog.cattle.io/namespace: fleet-default
+      catalog.cattle.io/type: cluster-template
+    apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-09-06T14:46:15.303289085Z"
+    description: Helm chart for managing Rancher cluster templates
+    digest: 435bada4648a04c0c77d89eb4bd622ca5805c7d026405984ffc0a189d66fb81f
+    home: https://github.com/SUSE/lab-setup/tree/main/charts/rancher-cluster-templates
+    maintainers:
+    - email: bertrand.thomas@suse.com
+      name: devpro
+    name: rancher-cluster-templates
+    type: application
+    urls:
+    - https://github.com/SUSE/lab-setup/releases/download/rancher-cluster-templates-0.1.0/rancher-cluster-templates-0.1.0.tgz
+    version: 0.1.0
   wordpress:
+  - apiVersion: v2
+    appVersion: 6.4.3
+    created: "2024-09-06T14:46:15.491694953Z"
+    dependencies:
+    - name: wordpress
+      repository: https://charts.bitnami.com/bitnami
+      version: 19.2.5
+    description: Helm chart for managing WordPress
+    digest: 107aaede2b9b14797b8657789ac7b346132cb8e0247cb9efa56edf318218b343
+    home: https://github.com/SUSE/lab-setup/tree/main/charts/wordpress
+    maintainers:
+    - email: bertrand.thomas@suse.com
+      name: devpro
+    name: wordpress
+    type: application
+    urls:
+    - https://github.com/SUSE/lab-setup/releases/download/wordpress-0.1.1/wordpress-0.1.1.tgz
+    version: 0.1.1
   - apiVersion: v2
     appVersion: 6.4.3
     created: "2024-09-05T06:55:38.264475071Z"
@@ -64,4 +157,4 @@ entries:
     urls:
     - https://github.com/SUSE/lab-setup/releases/download/wordpress-0.1.0/wordpress-0.1.0.tgz
     version: 0.1.0
-generated: "2024-09-05T06:55:38.264484538Z"
+generated: "2024-09-06T14:46:15.491708047Z"
