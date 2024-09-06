@@ -8,11 +8,11 @@ Install the app with default settings:
 
 ```bash
 # adds the repo
-helm repo add devpro https://devpro.github.io/helm-charts
+helm repo add suse-lab-setup https://opensource.suse.com/lab-setup
 helm repo update
 
 # installs the chart
-helm upgrade --install wordpress devpro/wordpress --namespace demo --create-namespace
+helm upgrade --install wordpress suse-lab-setup/wordpress --namespace demo --create-namespace
 ```
 
 Look at [values.yaml](values.yaml) for the configuration.

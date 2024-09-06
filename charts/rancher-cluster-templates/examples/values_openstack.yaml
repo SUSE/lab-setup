@@ -1,0 +1,14 @@
+cluster:
+  name: CLUSTER_NAME
+
+cloudprovider: openstack
+
+cloudCredentialSecretName: CLOUD_CREDENTIAL_SECRET
+
+nodepools:
+  - etcd: true
+    controlplane: true
+    worker: true
+    labels: {}
+    quantity: 1
+    name: nodepool-1

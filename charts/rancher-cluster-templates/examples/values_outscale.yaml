@@ -1,0 +1,22 @@
+cluster:
+  name: CLUSTER_NAME
+
+cloudprovider: outscale
+
+cloudCredentialSecretName: CLOUD_CREDENTIAL_SECRET
+
+kubernetesVersion: "v1.25.10+k3s1"
+
+nodepools:
+  - etcd: true
+    controlplane: true
+    worker: true
+    labels: {}
+    quantity: 1
+    name: nodepool-1
+    region: eu-west-2
+    machineImage: ami-cd8d714e
+    instanceType: tinav5.c3r4p1
+    # storageType: "gp2"
+    # diskSize: "15"
+    # diskIops: "1500"
