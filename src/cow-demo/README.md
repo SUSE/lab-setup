@@ -1,6 +1,6 @@
 # Cow Demo Application
 
-[![Docker Image Version](https://img.shields.io/docker/v/devprofr/cow-demo?label=Docker)](https://hub.docker.com/r/devprofr/cow-demo)
+[![Docker Image Version](https://img.shields.io/docker/v/suselabsetup/cow-demo?label=Docker)](https://hub.docker.com/r/suselabsetup/cow-demo)
 
 Cow Demo is a nice web application, written in Go, used for demonstrating Kubernetes and load balancing.
 
