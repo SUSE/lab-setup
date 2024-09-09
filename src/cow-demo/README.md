@@ -47,7 +47,7 @@ If you have a container engine running, you can start right away with the image:
 docker run --rm -p 8080:8080 ghcr.io/suse/cow-demo:1.0.10773428519
 ```
 
-Open the [web application](http://localhost:8080/) and enjoy the game!
+Open the [web application](http://localhost:8080/) and enjoy the interactive display!
 
 ## Deploy in an environment
 

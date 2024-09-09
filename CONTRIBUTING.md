@@ -35,11 +35,11 @@ The quality will be checked by the CI pipeline.
 
 ### Container image creation
 
-Here is how to build an image:
+Here is how to build and push an image to the registry:
 
 ```bash
-docker login -u $CONTAINER_REGISTRY_USER -p $CONTAINER_REGISTRY_PASSWD docker.io
+docker login -u $CONTAINER_REGISTRY_USER -p $CONTAINER_REGISTRY_PASSWD ghcr.io
 cd src/cow-demo
-docker build . -t suselabsetup/cow-demo:1.0.0
-docker push suselabsetup/cow-demo:1.0.0
+docker build . -t ghcr.io/suse/cow-demo:1.0.0
+docker push ghcr.io/suse/cow-demo:1.0.0
 ```
