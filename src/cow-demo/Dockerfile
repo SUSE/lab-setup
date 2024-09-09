@@ -9,12 +9,12 @@
 #WORKDIR /usr/src/ui/semantic
 #RUN npx gulp build
 
-FROM registry.suse.com/bci/golang:1.22 as buildgo
+FROM registry.suse.com/bci/golang:1.23 as buildgo
 COPY . /go/src
 WORKDIR /go/src
 RUN go build
 
-FROM registry.suse.com/bci/bci-minimal:15.5 as run
+FROM registry.suse.com/bci/bci-minimal:15.6 as run
 COPY ./static /static
 COPY ./templates /templates
 COPY --from=buildgo /go/src/cow-demo /bin/cow-demo

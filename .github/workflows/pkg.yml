@@ -2,7 +2,8 @@ name: PKG
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - "main"
   workflow_dispatch:
 
 permissions:
@@ -29,6 +30,7 @@ jobs:
             cow-demo: src/cow-demo/**
             rancher-helloworld: src/rancher-helloworld/**
   build:
+    if: ${{ github.ref_name == 'main' }}
     runs-on: ubuntu-latest
     steps:
       - name: Check-out the repository
@@ -76,8 +78,9 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
     needs: build
+    if: ${{ github.ref_name == 'main' }}
+    runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
@@ -89,27 +92,32 @@ jobs:
       matrix:
         app: ${{ fromJSON(needs.changes.outputs.apps) }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
     steps:
-      - name: Checkout source code
+      - name: Checkout repository
         uses: actions/checkout@v4
       - name: Login to container registry
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.CONTAINER_REGITRY_DOMAIN }}
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ${{ env.CONTAINER_REGISTRY_DOMAIN }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build container image
         run: |
           cd src/${{ matrix.app }}
-          docker build . --tag $IMAGE_FOLDER/${{ matrix.app }}:${{ env.IMAGE_TAG }}
+          docker build . --tag ${{ env.CONTAINER_REGISTRY_DOMAIN }}/${{ env.IMAGE_FOLDER }}/${{ matrix.app }}:${{ env.IMAGE_TAG }}
       - name: Push image to container registry
-        run: docker push $IMAGE_FOLDER/${{ matrix.app }}:${{ env.IMAGE_TAG }}
+        run: docker push ${{ env.CONTAINER_REGISTRY_DOMAIN }}/${{ env.IMAGE_FOLDER }}/${{ matrix.app }}:${{ env.IMAGE_TAG }}
       - name: Push latest tag to container registry
         if: ${{ github.ref_name == 'main' }}
         run: |
-          docker tag $IMAGE_FOLDER/${{ matrix.app }}:${{ env.IMAGE_TAG }} $IMAGE_FOLDER/${{ matrix.app }}:latest
-          docker push $IMAGE_FOLDER/${{ matrix.app }}:latest
+          docker tag ${{ env.CONTAINER_REGISTRY_DOMAIN }}/${{ env.IMAGE_FOLDER }}/${{ matrix.app }}:${{ env.IMAGE_TAG }} ${{ env.CONTAINER_REGISTRY_DOMAIN }}/${{ env.IMAGE_FOLDER }}/${{ matrix.app }}:latest
+          docker push ${{ env.CONTAINER_REGISTRY_DOMAIN }}/${{ env.IMAGE_FOLDER }}/${{ matrix.app }}:latest
     env:
-      CONTAINER_REGITRY_DOMAIN: docker.io
-      IMAGE_FOLDER: ${{ vars.DOCKERHUB_NAMESPACE }}
+      CONTAINER_REGISTRY_DOMAIN: ghcr.io
+      IMAGE_FOLDER: suse
       IMAGE_TAG: 1.0.${GITHUB_RUN_ID}

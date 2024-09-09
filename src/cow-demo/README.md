@@ -1,17 +1,17 @@
 # Cow Demo Application
 
-[![Docker Image Version](https://img.shields.io/docker/v/suselabsetup/cow-demo?label=Docker)](https://hub.docker.com/r/suselabsetup/cow-demo)
-
 Cow Demo is a nice web application, written in Go, used for demonstrating Kubernetes and load balancing.
 
 💡 This is a hard fork of [oskapt/rancher-demo](https://github.com/oskapt/rancher-demo) who hasn't been updated since 2021.
 It also took the updates from [bashofmann/rancher-demo](https://github.com/bashofmann/rancher-demo).
 
+## Presentation
+
 It will create a colored icon for each replica within a ReplicaSet and indicate which one most recently served a response.
 Replicas which haven't been heard from will begin to fade out, until after a configurable number of seconds they will disappear.
 This is useful for demonstrating scaling up/down an upgraded application.
 
-![screenshot](screenshot.png)
+## Configuration
 
 Environment variables:
 
@@ -38,6 +38,20 @@ Environment variables:
   - cows
   - chameleons
   - cowmeleons
+
+## Quickstart with a container
+
+If you have a container engine running, you can start right away with the image:
+
+```bash
+docker run --rm -p 8080:8080 ghcr.io/suse/cow-demo:1.0.10773428519
+```
+
+Open the [web application](http://localhost:8080/) and enjoy the interactive display!
+
+## Deploy in an environment
+
+The recommanded way to run the application is to deploy in a Kubernetes cluster with with the [Helm chart](https://github.com/SUSE/lab-setup/tree/main/charts/cow-demo).
 
 ## Local development
 
@@ -88,13 +102,13 @@ The container image is using [SUSE BCI (Base Container Images)](https://registry
 Build a local image:
 
 ```bash
-docker build -t cow-demo:local .
+docker build -t cow-demo .
 ```
 
 Start a container:
 
 ```bash
-docker run --rm -p 8080:8080 -e COW_COLOR:purple cow-demo:local
+docker run --rm -p 8080:8080 -e COW_COLOR:purple cow-demo
 ```
 
 Open [localhost:8080](http://localhost:8080)
