@@ -3,18 +3,12 @@
 
 #######################################
 # List clusters managed by Rancher
-# Arguments:
-#   Rancher URL
-#   token
 # Examples:
-#   rancher_list_clusters rancher.random_string.geek xxxxx
+#   rancher_list_clusters
 #######################################
 rancher_list_clusters() {
-  local rancherUrl=$1
-  local token=$2
-
   echo "Listing clusters registered in Rancher..."
-  curl -s -k "$rancherUrl/v3/clusters" -H "Authorization: Bearer $token" | jq .
+  kubectl get clusters.provisioning.cattle.io --all-namespaces -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
 }
 
 #######################################
@@ -22,107 +16,73 @@ rancher_list_clusters() {
 # Globals:
 #   CLUSTER_ID
 # Arguments:
-#   Rancher URL
-#   token
 #   name
 #   version (Kubernetes)
 # Examples:
-#   rancher_create_customcluster rancher.random_string.geek xxxxx demo 'v1.27.16+rke2r1'
+#   rancher_create_customcluster demo 'v1.27.16+rke2r1'
 #######################################
 rancher_create_customcluster() {
-  local rancherUrl=$1
-  local token=$2
-  local name=$3
-  local version=$4
+  local name=$1
+  local version=$2
 
   echo "Creating downstream cluster in Rancher..."
-  CLUSTER_CONFIG=$(cat <<EOF
-{
-  "type": "provisioning.cattle.io.cluster",
-  "metadata": {
-    "namespace": "fleet-default",
-    "name": "$name"
-  },
-  "spec": {
-    "rkeConfig": {
-      "chartValues": {
-        "rke2-calico": {}
-      },
-      "upgradeStrategy": {
-        "controlPlaneConcurrency": "1",
-        "controlPlaneDrainOptions": {
-          "deleteEmptyDirData": true,
-          "disableEviction": false,
-          "enabled": false,
-          "force": false,
-          "gracePeriod": -1,
-          "ignoreDaemonSets": true,
-          "skipWaitForDeleteTimeoutSeconds": 0,
-          "timeout": 120
-        },
-        "workerConcurrency": "1",
-        "workerDrainOptions": {
-          "deleteEmptyDirData": true,
-          "disableEviction": false,
-          "enabled": false,
-          "force": false,
-          "gracePeriod": -1,
-          "ignoreDaemonSets": true,
-          "skipWaitForDeleteTimeoutSeconds": 0,
-          "timeout": 120
-        }
-      },
-      "machineGlobalConfig": {
-        "cni": "calico",
-        "disable-kube-proxy": false,
-        "etcd-expose-metrics": false
-      },
-      "machineSelectorConfig": [
-        {
-          "config": {
-            "protect-kernel-defaults": false
-          }
-        }
-      ],
-      "etcd": {
-        "disableSnapshots": false,
-        "s3": null,
-        "snapshotRetention": 5,
-        "snapshotScheduleCron": "0 */5 * * *"
-      },
-      "registries": {
-        "configs": {},
-        "mirrors": {}
-      },
-      "machinePools": []
-    },
-    "machineSelectorConfig": [
-      {
-        "config": {}
-      }
-    ],
-    "kubernetesVersion": "$version",
-    "defaultPodSecurityAdmissionConfigurationTemplateName": "",
-    "localClusterAuthEndpoint": {
-      "enabled": false,
-      "caCerts": "",
-      "fqdn": ""
-    }
-  }
-}
+  cat <<EOF | kubectl apply -f -
+apiVersion: provisioning.cattle.io/v1
+kind: Cluster
+metadata:
+  name: "$name"
+  namespace: fleet-default
+spec:
+  kubernetesVersion: "$version"
+  localClusterAuthEndpoint: {}
+  rkeConfig:
+    chartValues:
+      rke2-calico: {}
+    dataDirectories: {}
+    etcd:
+      snapshotRetention: 5
+      snapshotScheduleCron: 0 */5 * * *
+    machineGlobalConfig:
+      cni: calico
+      disable-kube-proxy: false
+      etcd-expose-metrics: false
+    machinePoolDefaults: {}
+    machineSelectorConfig:
+      - config:
+          protect-kernel-defaults: false
+    registries: {}
+    upgradeStrategy:
+      controlPlaneConcurrency: '1'
+      controlPlaneDrainOptions:
+        deleteEmptyDirData: true
+        disableEviction: false
+        enabled: false
+        force: false
+        gracePeriod: -1
+        ignoreDaemonSets: true
+        ignoreErrors: false
+        postDrainHooks: null
+        preDrainHooks: null
+        skipWaitForDeleteTimeoutSeconds: 0
+        timeout: 120
+      workerConcurrency: '1'
+      workerDrainOptions:
+        deleteEmptyDirData: true
+        disableEviction: false
+        enabled: false
+        force: false
+        gracePeriod: -1
+        ignoreDaemonSets: true
+        ignoreErrors: false
+        postDrainHooks: null
+        preDrainHooks: null
+        skipWaitForDeleteTimeoutSeconds: 0
+        timeout: 120
 EOF
-  )
 
-  CLUSTER_CREATION_RESPONSE=$(curl -s -k -H "Authorization: Bearer $token" \
-    -H 'Content-Type: application/json' \
-    -X POST \
-    -d "$CLUSTER_CONFIG" \
-    "$rancherUrl/v1/provisioning.cattle.io.clusters")
-  echo "DEBUG CLUSTER_CREATION_RESPONSE=${CLUSTER_CREATION_RESPONSE}"
   sleep 10
 
-  rancher_get_clusterid $rancherUrl $token $name
-  echo "DEBUG CLUSTER_ID=${CLUSTER_ID}"
+  rancher_get_clusterid $name
 }
 
 #######################################
@@ -130,21 +90,15 @@ EOF
 # Globals:
 #   CLUSTER_ID
 # Arguments:
-#   Rancher URL
-#   token
 #   name
 # Examples:
-#   rancher_get_clusterid rancher.random_string.geek xxxxx demo
+#   rancher_get_clusterid demo
 #######################################
 rancher_get_clusterid() {
-  local rancherUrl=$1
-  local token=$2
-  local name=$3
+  local name=$1
 
-  CLUSTER_ID=$(curl -s ${rancherUrl}/v3/clusters?name=${name} \
-    -H 'content-type: application/json' \
-    -H "Authorization: Bearer ${token}" \
-    | jq -r .data[0].id)
+  CLUSTER_ID=$(kubectl get cluster.provisioning.cattle.io -n fleet-default -o=jsonpath="{range .items[?(@.metadata.name==\"${name}\")]}{.status.clusterName}{end}")
+  echo "DEBUG CLUSTER_ID=${CLUSTER_ID}"
 }
 
 #######################################
@@ -152,20 +106,13 @@ rancher_get_clusterid() {
 # Globals:
 #   REGISTRATION_COMMAND
 # Arguments:
-#   Rancher URL
-#   token
 #   cluster ID
 # Examples:
-#   rancher_get_clusterregistrationcommand rancher.random_string.geek xxxxx 42
+#   rancher_get_clusterregistrationcommand 42
 #######################################
 rancher_get_clusterregistrationcommand() {
-  local rancherUrl=$1
-  local token=$2
-  local id=$3
+  local id=$1
 
-  CLUSTER_REGISTRATION_RESPONSE=$(curl -s -k -H "Authorization: Bearer $token" "${rancherUrl}/v3/clusters/$id/clusterRegistrationTokens")
-  echo "DEBUG CLUSTER_REGISTRATION_RESPONSE=${CLUSTER_REGISTRATION_RESPONSE}"
-
-  REGISTRATION_COMMAND=$(echo $CLUSTER_REGISTRATION_RESPONSE | jq -r '.data[0].nodeCommand')
+  REGISTRATION_COMMAND=$(kubectl get clusterregistrationtoken.management.cattle.io -n $id -o=jsonpath='{.items[*].status.nodeCommand}')
   echo "DEBUG REGISTRATION_COMMAND=${REGISTRATION_COMMAND}"
 }

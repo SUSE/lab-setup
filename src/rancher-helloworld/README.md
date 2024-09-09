@@ -1,14 +1,24 @@
 # Rancher Hello World
 
-[![Docker Image Version](https://img.shields.io/docker/v/suselabsetup/rancher-helloworld?label=Docker)](https://hub.docker.com/r/suselabsetup/rancher-helloworld)
-
-This is the source code of a web application used for demoing and/or testing. It shows data about hostname, k8s services and request headers.
+This small web application is interesting as a first workload to install in a Kubernetes cluster. It shows data about hostname, services and request headers.
 
 💡 This is a hard fork of [rancher/hello-world](https://github.com/rancher/hello-world) which hasn't been updated since 2018.
 
-## Local development
+## Quickstart with a container
 
-### How to run locally
+If you have a container engine running, you can start right away with the image:
+
+```bash
+docker run --rm -p 8080:80 ghcr.io/suse/rancher-helloworld:1.0.10773428519
+```
+
+Open the [web application](http://localhost:8080/) and look at the information!
+
+## Deploy in an environment
+
+The recommanded way to run the application is to deploy in a Kubernetes cluster with with the [Helm chart](https://github.com/SUSE/lab-setup/tree/main/charts/rancher-helloworld).
+
+### Develop locally
 
 Update the dependencies (if a change has been made):
 
@@ -30,20 +40,20 @@ HTTP_PORT=8080 ./rancher-helloworld
 
 Open [localhost:8080](http://localhost:8080)
 
-### How to run in a container
+## Run from the sources
 
 The container image is using [SUSE BCI (Base Container Images)](https://registry.suse.com/).
 
 Build a local image:
 
 ```bash
-docker build -t rancher-helloworld:local .
+docker build -t rancher-helloworld .
 ```
 
 Start a container:
 
 ```bash
-docker run --rm -p 8080:80 rancher-helloworld:local
+docker run --rm -p 8080:80 rancher-helloworld
 ```
 
 Open [localhost:8080](http://localhost:8080)
