@@ -3,6 +3,8 @@
 
 #######################################
 # List clusters managed by Rancher
+# Examples:
+#   rancher_list_clusters
 #######################################
 rancher_list_clusters() {
   echo "Listing clusters registered in Rancher..."
@@ -77,11 +79,10 @@ spec:
         skipWaitForDeleteTimeoutSeconds: 0
         timeout: 120
 EOF
-  
+
   sleep 10
 
   rancher_get_clusterid $name
-  echo "DEBUG CLUSTER_ID=${CLUSTER_ID}"
 }
 
 #######################################
@@ -97,6 +98,7 @@ rancher_get_clusterid() {
   local name=$1
 
   CLUSTER_ID=$(kubectl get cluster.provisioning.cattle.io -n fleet-default -o=jsonpath="{range .items[?(@.metadata.name==\"${name}\")]}{.status.clusterName}{end}")
+  echo "DEBUG CLUSTER_ID=${CLUSTER_ID}"
 }
 
 #######################################
@@ -111,7 +113,6 @@ rancher_get_clusterid() {
 rancher_get_clusterregistrationcommand() {
   local id=$1
 
-  REGISTRATION_COMMAND=$(kubectl get clusterregistrationtoken.management.cattle.io -n $id -o=jsonpath='{.items[*].status.nodeCommand}'
-)
+  REGISTRATION_COMMAND=$(kubectl get clusterregistrationtoken.management.cattle.io -n $id -o=jsonpath='{.items[*].status.nodeCommand}')
   echo "DEBUG REGISTRATION_COMMAND=${REGISTRATION_COMMAND}"
 }

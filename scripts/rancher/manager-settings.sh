@@ -12,7 +12,5 @@ rancher_update_serverurl() {
   local rancherUrl=$1
 
   echo "Sets Rancher URL in settings..."
-  kubectl patch settings.management.cattle.io server-url --type='merge' --patch '{
-    "value": "'$rancherUrl'"
-    }'
+  kubectl patch settings.management.cattle.io server-url --type='merge' --patch '{ "value": "'$rancherUrl'" }'
 }

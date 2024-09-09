@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/SUSE/lab-setup/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/SUSE/lab-setup/actions/workflows/ci.yml)
 
-Welcome! You'll find in this repository some open-source material to setup a lab environment.
+Welcome! You'll find in this repository everything needed to setup a lab environment from open-source components.
 
 It is used internally at SUSE but is open to everyone. Feel free to [contribute](CONTRIBUTING.md) and share feedback!
 
@@ -43,3 +43,7 @@ helm upgrade --install cow-demo suse-lab-setup/cow-demo --namespace demo
 ```
 
 Browse the [catalog of Helm charts](charts/README.md).
+
+### Container images
+
+Browse the [catalog of applications](src/README.md).

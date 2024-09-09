@@ -44,7 +44,6 @@ rancher_update_password() {
   local currentPassword=$3
   local newPassword=$4
 
-  # updates  password
   echo "Updates Rancher user password..."
   curl -s -k -H "Authorization: Bearer $token" \
     -H 'Content-Type: application/json' \

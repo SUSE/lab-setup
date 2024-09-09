@@ -19,7 +19,6 @@ rancher_install_withcertmanagerclusterissuer() {
   local hostname=$4
   local clusterissuer=$5
 
-
   echo "Installing Rancher..."
   helm repo add rancher-${repository} https://releases.rancher.com/server-charts/${repository}
   helm repo update
