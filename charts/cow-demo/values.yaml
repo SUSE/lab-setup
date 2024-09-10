@@ -1,6 +1,6 @@
 name: cow-demo
-image: devprofr/cow-demo
-tag: 1.0.8830193847
+image: ghcr.io/suse/cow-demo
+tag: 1.0.10775272363
 replicaCount: 2
 port: 80
 ingress:
