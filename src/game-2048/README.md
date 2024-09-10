@@ -1,5 +1,7 @@
 # 2048 game
 
+[![Badge](https://badgen.net/static/Container%20Image/GitHub%20Packages/green)](https://github.com/SUSE/lab-setup/pkgs/container/game-2048)
+
 Let's play 2048 game in a browser!
 
 💡 This is a hard fork of [gabrielecirulli/2048](https://github.com/gabrielecirulli/2048) which hasn't been updated since 2017.

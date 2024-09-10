@@ -1,5 +1,7 @@
 # Rancher Hello World
 
+[![Badge](https://badgen.net/static/Container%20Image/GitHub%20Packages/green)](https://github.com/SUSE/lab-setup/pkgs/container/rancher-helloworld)
+
 This small web application is interesting as a first workload to install in a Kubernetes cluster. It shows data about hostname, services and request headers.
 
 💡 This is a hard fork of [rancher/hello-world](https://github.com/rancher/hello-world) which hasn't been updated since 2018.

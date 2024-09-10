@@ -1,5 +1,7 @@
 # Cow Demo Application
 
+[![Badge](https://badgen.net/static/Container%20Image/GitHub%20Packages/green)](https://github.com/SUSE/lab-setup/pkgs/container/cow-demo)
+
 Cow Demo is a nice web application, written in Go, used for demonstrating Kubernetes and load balancing.
 
 💡 This is a hard fork of [oskapt/rancher-demo](https://github.com/oskapt/rancher-demo) who hasn't been updated since 2021.
