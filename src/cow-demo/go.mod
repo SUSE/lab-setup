@@ -1,4 +1,4 @@
-module github.com/devpro/cow-demo
+module github.com/suse/lab-setup/cow-demo
 
 go 1.22
 
