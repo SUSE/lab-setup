@@ -57,8 +57,6 @@ jobs:
           helm repo update
       - name: Host charts repository on GitHub Pages
         uses: helm/chart-releaser-action@v1.6.0
-        with:
-          skip_existing: true
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
       - name: Checkout gh-pages branch
@@ -81,12 +79,12 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     needs: build
     if: ${{ github.ref_name == 'main' }}
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment

@@ -13,6 +13,20 @@ It will create a colored icon for each replica within a ReplicaSet and indicate 
 Replicas which haven't been heard from will begin to fade out, until after a configurable number of seconds they will disappear.
 This is useful for demonstrating scaling up/down an upgraded application.
 
+## Quickstart with a container
+
+If you have a container engine running, you can start right away with the image:
+
+```bash
+docker run --rm -p 8080:8080 ghcr.io/suse/cow-demo
+```
+
+Open the [web application](http://localhost:8080/) and enjoy the interactive display!
+
+## Deploy in an environment
+
+The recommanded way to run the application is to deploy in a Kubernetes cluster with with the [Helm chart](https://github.com/SUSE/lab-setup/tree/main/charts/cow-demo).
+
 ## Configuration
 
 Environment variables:
@@ -40,20 +54,6 @@ Environment variables:
   - cows
   - chameleons
   - cowmeleons
-
-## Quickstart with a container
-
-If you have a container engine running, you can start right away with the image:
-
-```bash
-docker run --rm -p 8080:8080 ghcr.io/suse/cow-demo:1.0.10773428519
-```
-
-Open the [web application](http://localhost:8080/) and enjoy the interactive display!
-
-## Deploy in an environment
-
-The recommanded way to run the application is to deploy in a Kubernetes cluster with with the [Helm chart](https://github.com/SUSE/lab-setup/tree/main/charts/cow-demo).
 
 ## Local development
 

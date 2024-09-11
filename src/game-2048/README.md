@@ -11,7 +11,7 @@ Let's play 2048 game in a browser!
 If you have a container engine running, you can start right away with the image:
 
 ```bash
-docker run --rm -p 8080:80 ghcr.io/suse/game-2048:1.0.10773428519
+docker run --rm -p 8080:80 ghcr.io/suse/game-2048
 ```
 
 Open the [web application](http://localhost:8080/) and enjoy the game!

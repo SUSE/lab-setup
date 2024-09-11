@@ -15,7 +15,7 @@ Wether you're looking for simple way to automate an infrastructure or running de
 Download and source the files (targetting `develop` branch):
 
 ```bash
-curl -sfL https://raw.githubusercontent.com/SUSE/lab-setup/develop/scripts/download.sh | GIT_REVISION=refs/heads/develop sh -s -- -o temp
+curl -sfL https://raw.githubusercontent.com/SUSE/lab-setup/develop/scripts/download.sh | sh -s -- -o temp
 . temp/scripts/index.sh
 ```
 
