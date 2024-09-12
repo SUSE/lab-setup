@@ -35,9 +35,9 @@ jobs:
         with:
           base: ${{ github.ref }}
           filters: |
-            game-2048: src/game-2048/**
-            cow-demo: src/cow-demo/**
-            rancher-helloworld: src/rancher-helloworld/**
+            game-2048: src/game-2048/**/*.!(md)
+            cow-demo: src/cow-demo/**/*.!(md)
+            rancher-helloworld: src/rancher-helloworld/**/*.!(md)
   code-check:
     runs-on: ubuntu-latest
     steps:
