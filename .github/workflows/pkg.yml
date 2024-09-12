@@ -25,15 +25,16 @@ jobs:
         id: filter
         with:
           base: ${{ github.ref }}
+          predicate-quantifier: 'every'
           filters: |
             game-2048:
-              - src/game-2048/**
+              - 'src/game-2048/**'
               - '!**/*.md'
             cow-demo:
-              - src/cow-demo/**
+              - 'src/cow-demo/**'
               - '!**/*.md'
             rancher-helloworld:
-              - src/rancher-helloworld/**
+              - 'src/rancher-helloworld/**'
               - '!**/*.md'
   build:
     if: ${{ github.ref_name == 'main' }}
