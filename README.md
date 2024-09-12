@@ -15,7 +15,7 @@ Wether you're looking for simple way to automate an infrastructure or running de
 Download and source the files (targetting `develop` branch):
 
 ```bash
-curl -sfL https://raw.githubusercontent.com/SUSE/lab-setup/develop/scripts/download.sh | GIT_REVISION=refs/heads/develop sh -s -- -o temp
+curl -sfL https://raw.githubusercontent.com/SUSE/lab-setup/develop/scripts/download.sh | sh -s -- -o temp
 . temp/scripts/index.sh
 ```
 
@@ -49,7 +49,7 @@ Browse the [catalog of Helm charts](charts/README.md).
 Use the container images we provide for our demonstrations, for instance:
 
 ```bash
-docker run --rm -p 8080:8080 ghcr.io/suse/cow-demo:1.0.10773428519
+docker run --rm -p 8080:8080 ghcr.io/suse/cow-demo
 ```
 
 Open the [web application](http://localhost:8080/) and enjoy the live display!

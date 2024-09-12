@@ -2,7 +2,7 @@ apiVersion: v2
 name: cow-demo
 description: Helm chart for Cow Demo Application
 type: application
-version: 0.1.1
+version: 0.1.2
 appVersion: "2.0.0"
 home: https://github.com/SUSE/lab-setup/tree/main/charts/cow-demo
 maintainers:

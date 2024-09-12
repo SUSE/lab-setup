@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/devpro/rancher-helloworld/templates"
+	"github.com/suse/lab-setup/rancher-helloworld/templates"
 )
 
 const defaultListenPort = "80"
