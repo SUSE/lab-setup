@@ -1,6 +1,6 @@
 name: game-2048
-image: devprofr/game-2048
-tag: "1.0.8328752292"
+image: ghcr.io/suse/game-2048
+tag: "1.0.10775272363"
 replicaCount: 1
 port: 80
 ingress:

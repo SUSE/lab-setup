@@ -1,5 +1,7 @@
 # Cow Demo Application
 
+[![Badge](https://badgen.net/static/Container%20Image/GitHub%20Packages/green)](https://github.com/SUSE/lab-setup/pkgs/container/cow-demo)
+
 Cow Demo is a nice web application, written in Go, used for demonstrating Kubernetes and load balancing.
 
 💡 This is a hard fork of [oskapt/rancher-demo](https://github.com/oskapt/rancher-demo) who hasn't been updated since 2021.
@@ -10,6 +12,20 @@ It also took the updates from [bashofmann/rancher-demo](https://github.com/basho
 It will create a colored icon for each replica within a ReplicaSet and indicate which one most recently served a response.
 Replicas which haven't been heard from will begin to fade out, until after a configurable number of seconds they will disappear.
 This is useful for demonstrating scaling up/down an upgraded application.
+
+## Quickstart with a container
+
+If you have a container engine running, you can start right away with the image:
+
+```bash
+docker run --rm -p 8080:8080 ghcr.io/suse/cow-demo
+```
+
+Open the [web application](http://localhost:8080/) and enjoy the interactive display!
+
+## Deploy in an environment
+
+The recommanded way to run the application is to deploy in a Kubernetes cluster with with the [Helm chart](https://github.com/SUSE/lab-setup/tree/main/charts/cow-demo).
 
 ## Configuration
 
@@ -38,20 +54,6 @@ Environment variables:
   - cows
   - chameleons
   - cowmeleons
-
-## Quickstart with a container
-
-If you have a container engine running, you can start right away with the image:
-
-```bash
-docker run --rm -p 8080:8080 ghcr.io/suse/cow-demo:1.0.10773428519
-```
-
-Open the [web application](http://localhost:8080/) and enjoy the interactive display!
-
-## Deploy in an environment
-
-The recommanded way to run the application is to deploy in a Kubernetes cluster with with the [Helm chart](https://github.com/SUSE/lab-setup/tree/main/charts/cow-demo).
 
 ## Local development
 

@@ -1,5 +1,7 @@
 # Rancher Hello World
 
+[![Badge](https://badgen.net/static/Container%20Image/GitHub%20Packages/green)](https://github.com/SUSE/lab-setup/pkgs/container/rancher-helloworld)
+
 This small web application is interesting as a first workload to install in a Kubernetes cluster. It shows data about hostname, services and request headers.
 
 💡 This is a hard fork of [rancher/hello-world](https://github.com/rancher/hello-world) which hasn't been updated since 2018.
@@ -9,7 +11,7 @@ This small web application is interesting as a first workload to install in a Ku
 If you have a container engine running, you can start right away with the image:
 
 ```bash
-docker run --rm -p 8080:80 ghcr.io/suse/rancher-helloworld:1.0.10773428519
+docker run --rm -p 8080:80 ghcr.io/suse/rancher-helloworld
 ```
 
 Open the [web application](http://localhost:8080/) and look at the information!

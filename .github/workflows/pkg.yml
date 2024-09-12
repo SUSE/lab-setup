@@ -26,9 +26,9 @@ jobs:
         with:
           base: ${{ github.ref }}
           filters: |
-            game-2048: src/game-2048/**
-            cow-demo: src/cow-demo/**
-            rancher-helloworld: src/rancher-helloworld/**
+            game-2048: src/game-2048/**/*.!(md)
+            cow-demo: src/cow-demo/**/*.!(md)
+            rancher-helloworld: src/rancher-helloworld/**/*.!(md)
   build:
     if: ${{ github.ref_name == 'main' }}
     runs-on: ubuntu-latest
@@ -51,8 +51,6 @@ jobs:
           helm repo update
       - name: Host charts repository on GitHub Pages
         uses: helm/chart-releaser-action@v1.6.0
-        with:
-          skip_existing: true
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
       - name: Checkout gh-pages branch
@@ -75,12 +73,12 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     needs: build
     if: ${{ github.ref_name == 'main' }}
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
