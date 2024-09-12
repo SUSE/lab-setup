@@ -25,17 +25,11 @@ jobs:
         id: filter
         with:
           base: ${{ github.ref }}
-          predicate-quantifier: 'every'
+          # predicate-quantifier and multiple filters don't work :(
           filters: |
-            game-2048:
-              - 'src/game-2048/**'
-              - '!**/*.md'
-            cow-demo:
-              - 'src/cow-demo/**'
-              - '!**/*.md'
-            rancher-helloworld:
-              - 'src/rancher-helloworld/**'
-              - '!**/*.md'
+            game-2048: src/game-2048/**/*.!(md)
+            cow-demo: src/cow-demo/**/*.!(md)
+            rancher-helloworld: src/rancher-helloworld/**/*.!(md)
   build:
     if: ${{ github.ref_name == 'main' }}
     runs-on: ubuntu-latest
