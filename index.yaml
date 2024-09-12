@@ -3,6 +3,20 @@ entries:
   cow-demo:
   - apiVersion: v2
     appVersion: 2.0.0
+    created: "2024-09-12T06:54:14.162536699Z"
+    description: Helm chart for Cow Demo Application
+    digest: 01f0b26a5fb2dfaf80404ef3c950e7703648bcf00b976e463eed0c8f073e4331
+    home: https://github.com/SUSE/lab-setup/tree/main/charts/cow-demo
+    maintainers:
+    - email: bertrand.thomas@suse.com
+      name: devpro
+    name: cow-demo
+    type: application
+    urls:
+    - https://github.com/SUSE/lab-setup/releases/download/cow-demo-0.1.2/cow-demo-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: 2.0.0
     created: "2024-09-06T14:46:14.565430075Z"
     description: Helm chart for Cow Demo Application
     digest: dd6cb77201abe3774d1f7f67acce92e0857dc33346ef38fd5d204781986aedd6
@@ -30,6 +44,20 @@ entries:
     - https://github.com/SUSE/lab-setup/releases/download/cow-demo-0.1.0/cow-demo-0.1.0.tgz
     version: 0.1.0
   game-2048:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2024-09-12T06:54:14.303585896Z"
+    description: Helm chart for Game 2048
+    digest: 1afa82d61327f9486f22c263748ad5044fc74858f611918ce93d4b2a9871631b
+    home: https://github.com/SUSE/lab-setup/tree/main/charts/game-2048
+    maintainers:
+    - email: bertrand.thomas@suse.com
+      name: devpro
+    name: game-2048
+    type: application
+    urls:
+    - https://github.com/SUSE/lab-setup/releases/download/game-2048-0.1.2/game-2048-0.1.2.tgz
+    version: 0.1.2
   - apiVersion: v2
     appVersion: 1.0.0
     created: "2024-09-06T14:46:14.745397464Z"
@@ -157,4 +185,4 @@ entries:
     urls:
     - https://github.com/SUSE/lab-setup/releases/download/wordpress-0.1.0/wordpress-0.1.0.tgz
     version: 0.1.0
-generated: "2024-09-06T14:46:15.491708047Z"
+generated: "2024-09-12T06:54:14.303617976Z"
