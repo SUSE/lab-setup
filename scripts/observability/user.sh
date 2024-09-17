@@ -31,7 +31,7 @@ observability_keycloak_login() {
         --data-urlencode 'grant_type=password')
 
     local access_token=$(echo $response | jq -r .access_token)
-    return $access_token
+    echo $access_token
 }
 
 #######################################

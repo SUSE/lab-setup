@@ -2,8 +2,8 @@
 
 #######################################
 # Create an Ingestion API key for SUSE Observability
-# Globals:
-#   INGESTION_API_KEY
+# Output:
+#   The ingestion API key
 # Arguments:
 #   url (SUSE Observability)
 #   service_token (SUSE Observability)
@@ -17,9 +17,8 @@ observability_create_ingestion_api_key() {
   local cluster_name=$3
 
   local resp=$(/usr/local/bin/sts ingestion-api-key create --name $cluster_name -o json --url $url --service-token $service_token)
-  INGESTION_API_KEY=$(echo $resp | jq -r '."ingestion-api-key".apiKey')
 
-  echo ">>> Ingestion API key for cluster '${cluster_name}' created"
+  echo $resp | jq -r '."ingestion-api-key".apiKey'
 }
 
 #######################################
@@ -43,6 +42,5 @@ observability_delete_ingestion_api_key() {
     echo ">>> Ingestion API key for cluster '${cluster_name}' deleted"
   else
     echo ">>> Ingestion API key for cluster '${cluster_name}' not found"
-    return
   fi
 }

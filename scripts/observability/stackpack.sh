@@ -21,7 +21,6 @@ observability_delete_stackpack() {
     echo ">>> StackPack for cluster '${cluster_name}' deleted"
   else
     echo ">>> StackPack for cluster '${cluster_name}' not found"
-    return
   fi
 }
 
@@ -32,7 +31,7 @@ observability_delete_stackpack() {
 #   service_token (SUSE Observability)
 #   cluster_name
 # Returns:
-#   0 if the StackPack instance exists, 1 otherwise
+#   `true` if the StackPack instance exists, `false` otherwise
 # Examples:
 #   observability_check_stackpack https://obs.suse.com/ xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx demo
 #######################################

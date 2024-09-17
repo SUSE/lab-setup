@@ -6,7 +6,7 @@
 #   url (SUSE Observability)
 #   service_token (SUSE Observability)
 #   stql
-# Returns:
+# Output:
 #   "CRITICAL", "DEVIATING", "UNKNOWN" or "CLEAR"
 # Examples:
 #   observability_get_component_state https://obs.suse.com/ xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx "lobel = \"cluster-name:$DOWNSTREAM_CLUSTER_NAME\" AND ..."
@@ -17,7 +17,7 @@ observability_get_component_state() {
     local stql=$3
 
     local component=$(observability_get_component_snapshot $url $service_token "$stql")
-    return $(echo $component | jq -r '.viewSnapshotResponse.components[0].state.healthState')
+    echo $component | jq -r '.viewSnapshotResponse.components[0].state.healthState'
 }
 
 #######################################
@@ -26,7 +26,7 @@ observability_get_component_state() {
 #   url (SUSE Observability)
 #   service_token (SUSE Observability)
 #   stql
-# Returns:
+# Output:
 #   JSON viewSnapshotResponse
 # Examples:
 #   observability_get_component_snapshot https://obs.suse.com/ xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx "lobel = \"cluster-name:$DOWNSTREAM_CLUSTER_NAME\" AND ..."
