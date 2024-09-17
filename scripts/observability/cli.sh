@@ -4,5 +4,9 @@
 # Install the SUSE Observability CLI
 #######################################
 observability_install_cli() {
-  curl -o- https://dl.stackstate.com/stackstate-cli/install.sh | STS_CLI_LOCATION=/usr/local/bin bash
+  if [ -x "$(command -v sts)" ]; then
+    curl -o- https://dl.stackstate.com/stackstate-cli/install.sh | STS_CLI_LOCATION=/usr/local/bin bash
+  else
+    echo ">>> sts CLI already installed"
+  fi
 }

@@ -12,9 +12,9 @@
 #   kc_username (Keycloak)
 #   kc_password (Keycloak)
 # Examples:
-#   observability_keycloak_login https://sso.suse.com instruqt suse xxxxxx admin password
+#   keycloak_login https://sso.suse.com instruqt suse xxxxxx admin password
 #######################################
-observability_keycloak_login() {
+keycloak_login() {
     local kc_url=$1
     local kc_realm=$2
     local kc_client_id=$3
@@ -43,14 +43,15 @@ observability_keycloak_login() {
 #   username
 #   password
 # Examples:
-#   observability_create_user https://sso.suse.com instruqt $SSO_ACCESS_TOKEN user password
+#   keycloak_create_user https://sso.suse.com instruqt $SSO_ACCESS_TOKEN user password group
 #######################################
-observability_create_user() {
+keycloak_create_user() {
   local kc_url=$1
   local kc_realm=$2
   local kc_access_token=$3
   local username=$4
   local password=$5
+  local group=$6
 
   local user_request
   user_request=$(cat <<EOF
@@ -60,7 +61,7 @@ observability_create_user() {
     "emailVerified": true,
     "requiredActions": [],
     "email": "$username@instruqt.suse.io",
-    "groups": ["/stackstate-k8s-troubleshooter"],
+    "groups": ["$group"],
     "credentials": [
       {
         "type": "password",
@@ -85,9 +86,9 @@ EOF
 #   kc_access_token (Keycloak)
 #   username
 # Examples:
-#   observability_delete_user https://sso.suse.com instruqt $SSO_ACCESS_TOKEN user
+#   keycloak_delete_user https://sso.suse.com instruqt $SSO_ACCESS_TOKEN user
 #######################################
-observability_delete_user() {
+keycloak_delete_user() {
   local kc_url=$1
   local kc_realm=$2
   local kc_access_token=$3
