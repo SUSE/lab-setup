@@ -22,7 +22,8 @@ observability_keycloak_login() {
     local kc_username=$5
     local kc_password=$6
 
-    local response=$(curl -s -X POST "$kc_url/realms/$kc_realm/protocol/openid-connect/token" \
+    local response
+    response=$(curl -s -X POST "$kc_url/realms/$kc_realm/protocol/openid-connect/token" \
         -H 'Content-Type: application/x-www-form-urlencoded' \
         --data-urlencode "client_id=$kc_client_id" \
         --data-urlencode "client_secret=$kc_client_secret" \
@@ -30,8 +31,7 @@ observability_keycloak_login() {
         --data-urlencode "password=$kc_password" \
         --data-urlencode 'grant_type=password')
 
-    local access_token=$(echo $response | jq -r .access_token)
-    echo $access_token
+    echo $response | jq -r .access_token
 }
 
 #######################################
@@ -52,7 +52,8 @@ observability_create_user() {
   local username=$4
   local password=$5
 
-  local user_request=$(cat <<EOF
+  local user_request
+  user_request=$(cat <<EOF
   {
     "username": "$username",
     "enabled": true,
@@ -92,7 +93,8 @@ observability_delete_user() {
   local kc_access_token=$3
   local username=$4
 
-  local user_id=$(curl -s -X GET "$kc_url/admin/realms/$kc_realm/users?username=$username" \
+  local user_id
+  user_id=$(curl -s -X GET "$kc_url/admin/realms/$kc_realm/users?username=$username" \
     -H "Authorization: Bearer $kc_access_token" | jq -r .[0].id)
 
   curl -s -X DELETE "$kc_url/admin/realms/$kc_realm/users/$user_id" \

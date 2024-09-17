@@ -16,7 +16,8 @@ observability_create_ingestion_api_key() {
   local service_token=$2
   local cluster_name=$3
 
-  local resp=$(/usr/local/bin/sts ingestion-api-key create --name $cluster_name -o json --url $url --service-token $service_token)
+  local resp
+  resp=$(/usr/local/bin/sts ingestion-api-key create --name $cluster_name -o json --url $url --service-token $service_token)
 
   echo $resp | jq -r '."ingestion-api-key".apiKey'
 }
@@ -35,9 +36,11 @@ observability_delete_ingestion_api_key() {
   local service_token=$2
   local cluster_name=$3
 
-  local keys=$(/usr/local/bin/sts ingestion-api-key list -o json --url $url --service-token $service_token)
-  local key_id=$(echo $keys | jq -r '."ingestion-api-keys"[] | select(.name == "'$cluster_name'") | .id')
-  if [ ! -z "$key_id" ]; then
+  local keys key_id
+
+  keys=$(/usr/local/bin/sts ingestion-api-key list -o json --url $url --service-token $service_token)
+  key_id=$(echo $keys | jq -r '."ingestion-api-keys"[] | select(.name == "'$cluster_name'") | .id')
+  if [ -n "$key_id" ]; then
     /usr/local/bin/sts ingestion-api-key delete --id $key_id --url $url --service-token $service_token
     echo ">>> Ingestion API key for cluster '${cluster_name}' deleted"
   else

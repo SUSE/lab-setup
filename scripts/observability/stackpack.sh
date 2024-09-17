@@ -14,9 +14,7 @@ observability_delete_stackpack() {
   local service_token=$2
   local cluster_name=$3
 
-  local stackpacks=$(/usr/local/bin/sts stackpack list-instances --name kubernetes-v2 -o json --url $url --service-token $service_token)
-  local stackpack_id=$(echo $stackpacks | jq -r '.instances[] | select(.config.kubernetes_cluster_name == "'$cluster_name'") | .id')
-  if [ ! -z "$stackpack_id" ];  then
+  if observability_check_stackpack $url $service_token $cluster_name;  then
     /usr/local/bin/sts stackpack uninstall --id $stackpack_id --url $url --service-token $service_token --name kubernetes-v2
     echo ">>> StackPack for cluster '${cluster_name}' deleted"
   else
@@ -40,8 +38,9 @@ observability_check_stackpack() {
   local service_token=$2
   local cluster_name=$3
 
-  local stackpacks=$(/usr/local/bin/sts stackpack list-instances --name kubernetes-v2 -o json --url $url --service-token $service_token)
-  local stackpack_id=$(echo $stackpacks | jq -r '.instances[] | select(.config.kubernetes_cluster_name == "'$cluster_name'") | .id')
-  [[ ! -z "$stackpack_id" ]]
+  local stackpacks stackpack_id
+  stackpacks=$(/usr/local/bin/sts stackpack list-instances --name kubernetes-v2 -o json --url $url --service-token $service_token)
+  stackpack_id=$(echo $stackpacks | jq -r '.instances[] | select(.config.kubernetes_cluster_name == "'$cluster_name'") | .id')
+  [[ -n "$stackpack_id" ]]
   return
 }

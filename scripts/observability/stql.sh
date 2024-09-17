@@ -16,7 +16,8 @@ observability_get_component_state() {
     local service_token=$2
     local stql=$3
 
-    local component=$(observability_get_component_snapshot $url $service_token "$stql")
+    local component
+    component=$(observability_get_component_snapshot $url $service_token "$stql")
     echo $component | jq -r '.viewSnapshotResponse.components[0].state.healthState'
 }
 
@@ -36,7 +37,8 @@ observability_get_component_snapshot() {
     local service_token=$2
     local stql=$3
 
-    local req=$(cat <<EOF
+    local req
+    req=$(cat <<EOF
 {
   "queryVersion": "1.0",
   "metadata":     {
