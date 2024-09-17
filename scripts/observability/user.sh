@@ -1,14 +1,28 @@
 #!/bin/bash
 
+#######################################
+# Login to Keycloak and get an access token
+# Globals:
+#  SSO_ACCESS_TOKEN
+# Arguments:
+#   kc_url (Keycloak)
+#   kc_realm (Keycloak)
+#   kc_client_id (Keycloak)
+#   kc_client_secret (Keycloak)
+#   kc_username (Keycloak)
+#   kc_password (Keycloak)
+# Examples:
+#   observability_keycloak_login https://sso.suse.com instruqt suse xxxxxx admin password
+#######################################
 observability_keycloak_login() {
-    kc_url=$1
-    kc_realm=$2
-    kc_client_id=$3
-    kc_client_secret=$4
-    kc_username=$4
-    kc_password=$5
+    local kc_url=$1
+    local kc_realm=$2
+    local kc_client_id=$3
+    local kc_client_secret=$4
+    local kc_username=$5
+    local kc_password=$6
 
-    response=$(curl -s -X POST "$kc_url/realms/$kc_realm/protocol/openid-connect/token" \
+    local response=$(curl -s -X POST "$kc_url/realms/$kc_realm/protocol/openid-connect/token" \
         -H 'Content-Type: application/x-www-form-urlencoded' \
         --data-urlencode "client_id=$kc_client_id" \
         --data-urlencode "client_secret=$kc_client_secret" \
@@ -16,19 +30,29 @@ observability_keycloak_login() {
         --data-urlencode "password=$kc_password" \
         --data-urlencode 'grant_type=password')
 
-    access_token=$(echo $response | jq -r .access_token)
-
-    echo $access_token
+    local access_token=$(echo $response | jq -r .access_token)
+    SSO_ACCESS_TOKEN=$access_token
 }
 
+#######################################
+# Create a user in Keycloak
+# Arguments:
+#   kc_url (Keycloak)
+#   kc_realm (Keycloak)
+#   kc_access_token (Keycloak)
+#   username
+#   password
+# Examples:
+#   observability_create_user https://sso.suse.com instruqt $SSO_ACCESS_TOKEN user password
+#######################################
 observability_create_user() {
-  kc_url=$1
-  kc_realm=$2
-  kc_access_token=$3
-  username=$4
-  password=$5
+  local kc_url=$1
+  local kc_realm=$2
+  local kc_access_token=$3
+  local username=$4
+  local password=$5
 
-  user_request=$(cat <<EOF
+  local user_request=$(cat <<EOF
   {
     "username": "$username",
     "enabled": true,
@@ -52,13 +76,23 @@ EOF
     --data-binary "$user_request"
 }
 
+#######################################
+# Delete a user in Keycloak
+# Arguments:
+#   kc_url (Keycloak)
+#   kc_realm (Keycloak)
+#   kc_access_token (Keycloak)
+#   username
+# Examples:
+#   observability_delete_user https://sso.suse.com instruqt $SSO_ACCESS_TOKEN user
+#######################################
 observability_delete_user() {
-  kc_url=$1
-  kc_realm=$2
-  kc_access_token=$3
-  username=$4
+  local kc_url=$1
+  local kc_realm=$2
+  local kc_access_token=$3
+  local username=$4
 
-  user_id=$(curl -s -X GET "$kc_url/admin/realms/$kc_realm/users?username=$username" \
+  local user_id=$(curl -s -X GET "$kc_url/admin/realms/$kc_realm/users?username=$username" \
     -H "Authorization: Bearer $kc_access_token" | jq -r .[0].id)
 
   curl -s -X DELETE "$kc_url/admin/realms/$kc_realm/users/$user_id" \
