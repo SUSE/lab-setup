@@ -36,7 +36,7 @@ wordpress:
   global:
     storageClass: azureblob-fuse
   wordpressUsername: myuser
-  wordpressBlogName: "My Wordpress!"
+  wordpressBlogName: "My WordPress!"
   existingSecret: wordpress-credentials
   ingress:
     enabled: true
