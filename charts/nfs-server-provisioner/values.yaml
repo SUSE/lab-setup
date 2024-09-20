@@ -1,0 +1,7 @@
+# refers to https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner/blob/master/charts/nfs-server-provisioner/values.yaml
+nfs-server-provisioner:
+  storageClass:
+    defaultClass: true
+    mountOptions:
+      - vers=3
+      - nolock

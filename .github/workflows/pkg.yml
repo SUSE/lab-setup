@@ -48,6 +48,7 @@ jobs:
       - name: Add dependency Helm chart repositories
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo add nfs-ganesha-server-and-external-provisioner https://kubernetes-sigs.github.io/nfs-ganesha-server-and-external-provisioner/
           helm repo update
       - name: Host charts repository on GitHub Pages
         uses: helm/chart-releaser-action@v1.6.0
