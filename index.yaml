@@ -130,6 +130,25 @@ entries:
     urls:
     - https://github.com/SUSE/lab-setup/releases/download/nfs-ganesha-0.1.0/nfs-ganesha-0.1.0.tgz
     version: 0.1.0
+  nfs-server-provisioner:
+  - apiVersion: v2
+    appVersion: 4.0.8
+    created: "2024-09-20T09:29:40.108773367Z"
+    dependencies:
+    - name: nfs-server-provisioner
+      repository: https://kubernetes-sigs.github.io/nfs-ganesha-server-and-external-provisioner/
+      version: 1.8.0
+    description: Helm chart for managing WordPress
+    digest: be3265bc15be298aa7314de89253b6cec8bb09d270c068ac66bc9323826847f4
+    home: https://github.com/SUSE/lab-setup/tree/main/charts/nfs-server-provisioner
+    maintainers:
+    - email: bertrand.thomas@suse.com
+      name: devpro
+    name: nfs-server-provisioner
+    type: application
+    urls:
+    - https://github.com/SUSE/lab-setup/releases/download/nfs-server-provisioner-0.1.0/nfs-server-provisioner-0.1.0.tgz
+    version: 0.1.0
   rancher-cluster-templates:
   - annotations:
       catalog.cattle.io/namespace: fleet-default
@@ -149,6 +168,24 @@ entries:
     - https://github.com/SUSE/lab-setup/releases/download/rancher-cluster-templates-0.1.0/rancher-cluster-templates-0.1.0.tgz
     version: 0.1.0
   wordpress:
+  - apiVersion: v2
+    appVersion: 6.6.2
+    created: "2024-09-20T09:29:40.247112594Z"
+    dependencies:
+    - name: wordpress
+      repository: https://charts.bitnami.com/bitnami
+      version: 23.1.15
+    description: Helm chart for managing WordPress
+    digest: c0bd83f0414797c4a05fd0fe9b304c835bf433e8d56e2998e2c0b08cf3b45754
+    home: https://github.com/SUSE/lab-setup/tree/main/charts/wordpress
+    maintainers:
+    - email: bertrand.thomas@suse.com
+      name: devpro
+    name: wordpress
+    type: application
+    urls:
+    - https://github.com/SUSE/lab-setup/releases/download/wordpress-0.1.2/wordpress-0.1.2.tgz
+    version: 0.1.2
   - apiVersion: v2
     appVersion: 6.4.3
     created: "2024-09-06T14:46:15.491694953Z"
@@ -185,4 +222,4 @@ entries:
     urls:
     - https://github.com/SUSE/lab-setup/releases/download/wordpress-0.1.0/wordpress-0.1.0.tgz
     version: 0.1.0
-generated: "2024-09-12T06:54:14.303617976Z"
+generated: "2024-09-20T09:29:40.247152448Z"
