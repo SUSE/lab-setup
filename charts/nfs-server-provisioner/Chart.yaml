@@ -1,0 +1,14 @@
+apiVersion: v2
+name: nfs-server-provisioner
+description: Helm chart for managing WordPress
+type: application
+version: 0.1.0
+appVersion: "4.0.8"
+dependencies:
+  - name: nfs-server-provisioner
+    version: 1.8.0
+    repository: https://kubernetes-sigs.github.io/nfs-ganesha-server-and-external-provisioner/
+home: https://github.com/SUSE/lab-setup/tree/main/charts/nfs-server-provisioner
+maintainers:
+  - name: devpro
+    email: bertrand.thomas@suse.com
