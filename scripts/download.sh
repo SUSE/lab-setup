@@ -35,10 +35,6 @@ fatal() {
 
 verify_system() {
   info 'Verify system requirements'
-  if [ -x /usr/bin/git ] || type git > /dev/null 2>&1; then
-      return
-  fi
-  fatal 'Git is not installed in the machine'
   if ! command -v jq &> /dev/null; then
     fatal 'jq is not installed in the machine'
   fi
