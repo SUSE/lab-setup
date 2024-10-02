@@ -48,6 +48,20 @@ entries:
   nfs-ganesha:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2024-10-02T16:07:51.091907336Z"
+    description: Helm chart for managing NFS-Ganesha
+    digest: 66a6922f0ce196c7075d104cd984d748dd25edbfa8e3a8e8a94639ee7a819c41
+    home: https://github.com/SUSE/lab-setup/tree/main/charts/nfs-ganesha
+    maintainers:
+    - email: bertrand.thomas@suse.com
+      name: devpro
+    name: nfs-ganesha
+    type: application
+    urls:
+    - https://github.com/SUSE/lab-setup/releases/download/nfs-ganesha-0.1.1/nfs-ganesha-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2024-09-06T14:46:15.128964184Z"
     description: Helm chart for managing NFS-Ganesha
     digest: 1da17cd85d36248b8f13f40961e590e5d20c495794c2582b5c3e41d48ae9cef8
@@ -79,7 +93,47 @@ entries:
     urls:
     - https://github.com/SUSE/lab-setup/releases/download/nfs-server-provisioner-0.1.0/nfs-server-provisioner-0.1.0.tgz
     version: 0.1.0
+  portworx-bbq:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2024-10-02T16:07:51.261906784Z"
+    dependencies:
+    - alias: mongodb
+      condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 15.6.25
+    description: Helm chart for Portworx BBQ demo application
+    digest: 64be9e79bba483fddcb0c162458cb1c88227e7c8aec8f94fd04ed63707f207c7
+    home: https://github.com/SUSE/lab-setup/tree/main/charts/portworx-bbq
+    maintainers:
+    - email: bertrand.thomas@suse.com
+      name: devpro
+    - email: ccrow@purestorage.com
+      name: ccrow42
+    name: portworx-bbq
+    type: application
+    urls:
+    - https://github.com/SUSE/lab-setup/releases/download/portworx-bbq-0.1.0/portworx-bbq-0.1.0.tgz
+    version: 0.1.0
   rancher-cluster-templates:
+  - annotations:
+      catalog.cattle.io/namespace: fleet-default
+      catalog.cattle.io/type: cluster-template
+    apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-10-02T16:07:51.361010936Z"
+    description: Helm chart for managing Rancher cluster templates
+    digest: c6e48c65e76343f7b35b4f8e49c8e36c5fa2017fed70b7ce2c66d85563dc9d43
+    home: https://github.com/SUSE/lab-setup/tree/main/charts/rancher-cluster-templates
+    maintainers:
+    - email: bertrand.thomas@suse.com
+      name: devpro
+    name: rancher-cluster-templates
+    type: application
+    urls:
+    - https://github.com/SUSE/lab-setup/releases/download/rancher-cluster-templates-0.1.1/rancher-cluster-templates-0.1.1.tgz
+    version: 0.1.1
   - annotations:
       catalog.cattle.io/namespace: fleet-default
       catalog.cattle.io/type: cluster-template
@@ -134,4 +188,4 @@ entries:
     urls:
     - https://github.com/SUSE/lab-setup/releases/download/wordpress-0.1.1/wordpress-0.1.1.tgz
     version: 0.1.1
-generated: "2024-09-20T09:29:40.247152448Z"
+generated: "2024-10-02T16:07:51.361043838Z"
