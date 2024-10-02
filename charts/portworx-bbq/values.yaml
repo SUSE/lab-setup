@@ -1,0 +1,40 @@
+front:
+  name: pxbbq-web
+  image: eshanks16/pxbbq  # TODO: see how to create an image using SUSE BCI
+  tag: v2                 # v4.4 fails asking for NEO4J_URI environment variable
+  replicaCount: 3
+  containerPort: 8080
+  healthEndpoint: /healthz
+  host: ""
+  port: 80
+  tls:
+    secretName: "pxbbq-web-tls"
+  db:
+    host: ""
+    port: "27017"
+    username: "porxie"
+    userpwd: ""
+    tls: ""
+  extraEnv: []
+    # - name: xxx
+    #   value: "yyyy"
+  additionalPodLabels: {}
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 64Mi
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+
+mongodb:
+  enabled: false
+  # https://github.com/bitnami/charts/blob/main/bitnami/mongodb/values.yaml
+  auth: {}
+    # rootPassword: ""

@@ -25,6 +25,8 @@ rancher_create_customcluster() {
   local name=$1
   local version=$2
 
+  rancher_wait_capiready
+
   echo "Creating downstream cluster in Rancher..."
   cat <<EOF | kubectl apply -f -
 apiVersion: provisioning.cattle.io/v1

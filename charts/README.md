@@ -24,5 +24,5 @@ helm template <releasename> . -f values.yaml -f values_mine.yaml --namespace dem
 # installs a chart from local source
 helm upgrade --install <releasename> . -f values.yaml \
   # --debug > output.yaml \
-  --create-namespace --namespace nfs-ganesha
+  --create-namespace --namespace demo
 ```
