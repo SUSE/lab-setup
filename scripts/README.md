@@ -4,6 +4,7 @@
 
 Name                                           | Source
 -----------------------------------------------|-----------------------------------------------------------------------------
+`instruqt_wait_hoststartup`                    | [instruqt/host.sh](instruqt/host.sh)
 `k3s_copy_kubeconfig`                          | [k3s/cluster_lifecycle.sh](k3s/cluster_lifecycle.sh)
 `k3s_create_cluster`                           | [k3s/cluster_lifecycle.sh](k3s/cluster_lifecycle.sh)
 `k8s_create_letsencryptclusterissuer`          | [kubernetes/certificate_management.sh](kubernetes/certificate_management.sh)
@@ -30,6 +31,11 @@ Name                                           | Source
 `rancher_update_password`                      | [rancher/user_actions.sh](rancher/user_actions.sh)
 `rancher_update_serverurl`                     | [rancher/manager_settings.sh](rancher/manager_settings.sh)
 `rancher_wait_capiready`                       | [rancher/manager_lifecycle.sh](rancher/manager_lifecycle.sh)
+`suselinux_install_git`                        | [suselinux/packages.sh](suselinux/packages.sh)
+`suselinux_install_helm`                       | [suselinux/packages.sh](suselinux/packages.sh)
+`suselinux_install_kubectl`                    | [suselinux/packages.sh](suselinux/packages.sh)
+`suselinux_install_podman`                     | [suselinux/packages.sh](suselinux/packages.sh)
+`suselinux_register_cloudguest`                | [suselinux/registration.sh](suselinux/registration.sh)
 
 ## Concrete examples
 
