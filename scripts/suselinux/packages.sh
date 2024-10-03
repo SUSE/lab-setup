@@ -47,6 +47,19 @@ suselinux_install_git() {
 }
 
 #######################################
+# Install open-iscsi on SUSE Linux
+# Examples:
+#   suselinux_install_openiscsi
+#######################################
+suselinux_install_openiscsi() {
+  zypper --gpg-auto-import-keys -q refresh
+  zypper --gpg-auto-import-keys -q install -y open-iscsi
+  systemctl -q enable iscsid
+  systemctl start iscsid
+  modprobe iscsi_tcp
+}
+
+#######################################
 # Install Podman on SUSE Linux
 # Examples:
 #   suselinux_install_kubectl

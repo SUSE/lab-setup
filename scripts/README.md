@@ -34,6 +34,7 @@ Name                                           | Source
 `suselinux_install_git`                        | [suselinux/packages.sh](suselinux/packages.sh)
 `suselinux_install_helm`                       | [suselinux/packages.sh](suselinux/packages.sh)
 `suselinux_install_kubectl`                    | [suselinux/packages.sh](suselinux/packages.sh)
+`suselinux_install_openiscsi`                  | [suselinux/packages.sh](suselinux/packages.sh)
 `suselinux_install_podman`                     | [suselinux/packages.sh](suselinux/packages.sh)
 `suselinux_register_cloudguest`                | [suselinux/registration.sh](suselinux/registration.sh)
 
