@@ -114,7 +114,7 @@ rancher_create_customcluster() {
 rancher_return_clusterid() {
   local name=$1
 
-  echo $(kubectl get cluster.provisioning.cattle.io -n fleet-default -o=jsonpath="{range .items[?(@.metadata.name==\"${name}\")]}{.status.clusterName}{end}")
+  kubectl get cluster.provisioning.cattle.io -n fleet-default -o=jsonpath="{range .items[?(@.metadata.name==\"${name}\")]}{.status.clusterName}{end}"
 }
 
 #######################################
@@ -143,7 +143,7 @@ rancher_get_clusterid() {
 rancher_return_clusterregistrationcommand() {
   local id=$1
 
-  echo $(kubectl get clusterregistrationtoken.management.cattle.io -n $id -o=jsonpath='{.items[*].status.nodeCommand}')
+  kubectl get clusterregistrationtoken.management.cattle.io -n $id -o=jsonpath='{.items[*].status.nodeCommand}'
 }
 
 #######################################
