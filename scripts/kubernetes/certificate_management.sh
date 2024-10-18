@@ -11,7 +11,7 @@
 k8s_install_certmanager() {
   local version=$1
 
-  echo "Installing cert-manager..."
+  echo 'Installing cert-manager...'
   helm repo add jetstack https://charts.jetstack.io
   helm repo update
   kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/${version}/cert-manager.crds.yaml

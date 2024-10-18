@@ -44,7 +44,7 @@ rancher_update_password() {
   local currentPassword=$3
   local newPassword=$4
 
-  echo "Updates Rancher user password..."
+  echo 'Updates Rancher user password...'
   curl -s -k -H "Authorization: Bearer $token" \
     -H 'Content-Type: application/json' \
     -X POST \
@@ -71,7 +71,7 @@ rancher_create_apikey() {
   local token=$2
   local description=$3
 
-  echo "Creates a Rancher API Key..."
+  echo 'Creates a Rancher API Key...'
   API_KEY_RESPONSE=$(curl -s -k "$rancherUrl/v3/tokens" \
     -H 'Content-Type: application/json' \
     -H "Authorization: Bearer $token" \

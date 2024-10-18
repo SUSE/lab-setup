@@ -7,7 +7,7 @@
 #   rancher_list_clusters
 #######################################
 rancher_list_clusters() {
-  echo "Listing clusters registered in Rancher..."
+  echo 'Listing clusters registered in Rancher...'
   kubectl get clusters.provisioning.cattle.io --all-namespaces -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
 }
 
@@ -27,7 +27,7 @@ rancher_create_customcluster_nowait() {
 
   rancher_wait_capiready
 
-  echo "Creating downstream cluster in Rancher..."
+  echo 'Creating downstream cluster in Rancher...'
   cat <<EOF | kubectl apply -f -
 apiVersion: provisioning.cattle.io/v1
 kind: Cluster
