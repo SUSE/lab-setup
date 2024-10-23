@@ -11,7 +11,7 @@
 k3s_create_cluster() {
   local version=$1
 
-  echo "Create management cluster (K3s)..."
+  echo 'Create management cluster (K3s)...'
   curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL="${version}" K3S_KUBECONFIG_MODE="644" sh -
 }
 

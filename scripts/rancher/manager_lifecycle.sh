@@ -19,7 +19,7 @@ rancher_install_withcertmanagerclusterissuer() {
   local hostname=$4
   local clusterissuer=$5
 
-  echo "Installing Rancher..."
+  echo 'Installing Rancher...'
   helm repo add rancher-${repository} https://releases.rancher.com/server-charts/${repository}
   helm repo update
   helm upgrade --install rancher rancher-${repository}/rancher --namespace cattle-system --create-namespace \
@@ -31,7 +31,7 @@ rancher_install_withcertmanagerclusterissuer() {
     --set ingress.tls.secretName=rancher-tls \
     --set agentTLSMode="system-store"
   kubectl wait pods -n cattle-system -l app=rancher --for condition=Ready --timeout=180s
-  echo "Waiting for Rancher web app to be running with a valid certificate..."
+  echo 'Waiting for Rancher web app to be running with a valid certificate...'
   while ! kubectl get secret rancher-tls --namespace cattle-system 2>/dev/null; do sleep 1; done
   sleep 10
 }
@@ -48,7 +48,7 @@ rancher_first_login() {
   local rancherUrl=$1
   local newPassword=$2
 
-  echo "Do first login on Rancher..."
+  echo 'Do first login on Rancher...'
   BOOTSTRAP_PASSWORD=$(kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{.data.bootstrapPassword|base64decode}}{{ "\n" }}')
   echo "DEBUG BOOTSTRAP_PASSWORD=${BOOTSTRAP_PASSWORD}"
   rancher_login_withpassword $rancherUrl 'admin' $BOOTSTRAP_PASSWORD
@@ -67,14 +67,14 @@ rancher_first_login() {
 rancher_wait_capiready() {
   while true; do
     status=$(kubectl get deployment capi-controller-manager -n cattle-provisioning-capi-system -o jsonpath='{.status.conditions[?(@.type=="Available")].status}' 2>/dev/null)
-    if [ "$status" == "True" ]; then
-      echo "Deployment capi-controller-manager is available"
+    if [ "$status" == 'True' ]; then
+      echo 'Deployment capi-controller-manager is available'
       break
     fi
     sleep 10
   done
-  while [[ $(kubectl get endpoints capi-webhook-service -n cattle-provisioning-capi-system -o jsonpath='{.subsets}' 2>/dev/null) == "" ]]; do
+  while [[ $(kubectl get endpoints capi-webhook-service -n cattle-provisioning-capi-system -o jsonpath='{.subsets}' 2>/dev/null) == '' ]]; do
     sleep 10
   done
-  echo "Service capi-webhook-service is ready"
+  echo 'Service capi-webhook-service is ready'
 }
