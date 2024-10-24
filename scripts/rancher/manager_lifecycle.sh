@@ -47,10 +47,10 @@ rancher_install_withcertmanagerclusterissuer() {
 #   rancher_install_withcertmanagerclusterissuer latest "2.8.2" 1 rancher.random_string.geek letsencrypt-prod
 #######################################
 rancherprime_install_withcertmanagerclusterissuer() {
-  local version=$2
-  local replicas=$3
-  local hostname=$4
-  local clusterissuer=$5
+  local version=$1
+  local replicas=$2
+  local hostname=$3
+  local clusterissuer=$4
 
   echo "Installing Rancher..."
   helm repo add rancher-prime https://charts.rancher.com/server-charts/prime
