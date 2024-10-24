@@ -53,6 +53,12 @@ Name                                           | Source
 `rancher_update_serverurl`                     | [rancher/manager_settings.sh](rancher/manager_settings.sh)
 `rancher_wait_capiready`                       | [rancher/manager_lifecycle.sh](rancher/manager_lifecycle.sh)
 
+### Rancher Prime
+
+Name                                           | Source
+-----------------------------------------------|-------------------------------------------------------------
+`rancherprime_install_withcertmanagerclusterissuer` | [rancher/manager_lifecycle.sh](rancher/manager_lifecycle.sh)
+
 ### SUSE Observability
 
 Name                                     | Source
