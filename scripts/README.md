@@ -70,6 +70,8 @@ Name                                     | Source
 `observability_get_component_snapshot`   | [observability/stql.sh](observability/stql.sh)
 `observability_get_component_state`      | [observability/stql.sh](observability/stql.sh)
 `observability_install_cli`              | [observability/cli.sh](observability/cli.sh)
+`observability_create_service_token`     | [observability/service_token.sh](observability/service_token.sh)
+`observability_delete_service_token`     | [observability/service_token.sh](observability/service_token.sh)
 
 ### SUSE Linux (previously SLES, SLE Micro)
 
