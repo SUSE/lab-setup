@@ -1,0 +1,195 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ${ds389_ns_name:-ds389}
+...
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ${ds389_name:-ds389}-sa
+  namespace: ${ds389_ns_name:-ds389}
+...
+
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dirsrv-tls-secret
+  namespace: ${ds389_ns_name:-ds389}
+data:
+  tls.key: |
+    ${ds389_tls_key:-LS0tLS1CRUdJTiBFTkNSWVBURUQgUFJJVkFURSBLRVktLS0tLQpNSUlKbnpCSkJna3Foa2lHOXcw
+    QkJRMHdQREFiQmdrcWhraUc5dzBCQlF3d0RnUUlMZmtpMDkwcnZsb0NBZ2dBCk1CMEdDV0NHU0FG
+    bEF3UUJLZy4uLkdOWWM3aTlTVkRCb0E9PQotLS0tLUVORCBFTkNSWVBURUQgUFJJVkFURSBLRVkt
+    LS0tLQ==}
+  tls.crt: |
+    ${ds389_tls_cert:-LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUZ4akNDQTY0Q0NRQ05UK2VQMnZqSnh6QU5C
+    Z2txaGtpRzl3MEJBUXNGQURDQnBERUxNQWtHQTFVRUJoTUMKUmxJeEVqQVFCZ05WQkFnTUMuLi51
+    ZEp3RTdIbm5BN2xwQQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0t}
+...
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dirsrv-dm-password
+  namespace: ${ds389_ns_name:-ds389}
+data:
+# Password must be in base64
+  dm-password: ${ds389_dm_pwd_b64:-YWRtaW4xMjM=}
+#  dm-password: admin123 
+...
+
+
+---
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: ${ds389_name:-ds389}
+  namespace: ${ds389_ns_name:-ds389}
+spec:
+  serviceName: ${ds389_name:-ds389}-internal-svc
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${ds389_name:-ds389}
+  template:
+    metadata:
+      labels:
+        app: ${ds389_name:-ds389}
+    spec:
+      serviceAccountName: ${ds389_name:-ds389}-sa
+      securityContext:
+        fsGroup: 499
+      initContainers:
+      # Init container is required to change the permissions after a persistent volume is mounted.
+      # Otherwise dscontainer will be denied to create subdirectories and will fail to start.
+      - name: ${ds389_name:-ds389}-init-container
+        image: busybox
+        command: ["/bin/sh", "-c", "chown -R 499:499 /data"]
+        volumeMounts:
+        - name: ${ds389_name:-ds389}-data
+          mountPath: /data
+      containers:
+        - name: dirsrv-container
+          image: ${ds389_image:-docker.io/389ds/dirsrv}
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 60; dsconf localhost backend create --suffix ${ds389_rootdn:-dc=mydemo,dc=lab} --be-name userroot --create-suffix --create-entries ;
+                          dsconf localhost pwpolicy set --pwdscheme=CRYPT-SHA512 ;
+                          dsconf localhost config replace nsslapd-rootpwstoragescheme=CRYPT-SHA512 ;
+                          dsconf localhost config replace nsslapd-rootpw=${ds389_dm_pwd:-admin123} ;
+                          dsconf localhost plugin referential-integrity enable ;
+                          dsconf localhost plugin memberof enable ;
+                          dsconf localhost config replace nsslapd-allow-anonymous-access=off ;
+                          dsidm localhost --basedn ${ds389_rootdn:-dc=mydemo,dc=lab} user create --uid ldap_user --cn ldap_user --displayName ldap_user --uidNumber 1001 --gidNumber 1001 --homeDirectory /home/ldap_user ;
+                          dsidm localhost -b ${ds389_rootdn:-dc=mydemo,dc=lab}  account change_password uid=ldap_user,ou=people,${ds389_rootdn:-dc=mydemo,dc=lab} ${ds389_users_pwd:-supersecret123} ;
+                          dsidm localhost --basedn ${ds389_rootdn:-dc=mydemo,dc=lab} user create --uid developer --cn developer --displayName developer --uidNumber 1002 --gidNumber 1002 --homeDirectory /home/developer ;
+                          dsidm localhost -b ${ds389_rootdn:-dc=mydemo,dc=lab} account change_password uid=developer,ou=people,${ds389_rootdn:-dc=mydemo,dc=lab} ${ds389_users_pwd:-supersecret123} ;
+                          dsidm localhost --basedn ${ds389_rootdn:-dc=mydemo,dc=lab} group create --cn developers;
+                          dsidm localhost -b ${ds389_rootdn:-dc=mydemo,dc=lab} group add_member developers uid=developer,ou=people,${ds389_rootdn:-dc=mydemo,dc=lab}   "]
+          env:
+          ## Set `cn=Directory Manager`'s password
+          - name: DS_DM_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: dirsrv-dm-password
+                key: dm-password
+          ## Use suffix as a basedn in `dsrc` file
+          - name: DS_SUFFIX_NAME
+            value: "${ds389_rootdn:-dc=mydemo,dc=lab}"
+          ## DS_ERRORLOG_LEVEL - set the log level for `ns-slapd`, default is 266354688
+          - name: DS_ERRORLOG_LEVEL
+            value: "8192"
+          ## DS_MEMORY_PERCENTAGE - set LDBM autotune percentage (`nsslapd-cache-autosize`), default is 25
+          - name: DS_MEMORY_PERCENTAGE
+            value: "10"
+          ## DS_REINDEX` - run database reindex task (`db2index`)
+          - name: DS_REINDEX
+            value: "True"
+          ## DS_STARTUP_TIMEOUT - set container startup timeout in seconds, default is 60 seconds.
+          - name: DS_STARTUP_TIMEOUT
+            value: "120"
+          ports:
+            - containerPort: 3389
+              protocol: TCP
+            - containerPort: 3636
+              protocol: TCP
+          securityContext:
+            runAsUser: 489
+          volumeMounts:
+          - name: ${ds389_name:-ds389}-data
+            mountPath: "/data"
+          - name: dirsrv-tls
+            mountPath: '/data/tls/'
+            readOnly: true
+      volumes:
+      - name: dirsrv-tls
+        secret:
+          secretName: dirsrv-tls-secret
+          items:
+          - key: tls.key
+            path: server.key
+          - key: tls.crt
+            path: server.crt
+  volumeClaimTemplates:
+  - metadata:
+      name: ${ds389_name:-ds389}-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: ${ds389_vc_size:-5Gi}
+...
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: ${ds389_name:-ds389}
+  name: ${ds389_name:-ds389}-internal-svc
+  namespace: ${ds389_ns_name:-ds389}
+spec:
+  clusterIP: None
+  ports:
+  - name: ${ds389_name:-ds389}-port
+    port: 3389
+    protocol: TCP
+    targetPort: 3389
+  - name: ${ds389_name:-ds389}-tls-port
+    port: 3636
+    protocol: TCP
+    targetPort: 3636
+  selector:
+    app: ${ds389_name:-ds389}
+  type: ClusterIP
+...
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: ${ds389_name:-ds389}
+  name: ${ds389_name:-ds389}-external-svc
+  namespace: ${ds389_ns_name:-ds389}
+spec:
+  ports:
+    - name: ${ds389_name:-ds389}-port
+      port: 3389
+      protocol: TCP
+      targetPort: 3389
+      nodePort: ${ds389_port:-30389}
+    - name: ${ds389_name:-ds389}-tls-port
+      port: 3636
+      protocol: TCP
+      targetPort: 3636
+      nodePort: ${ds389_port_tls:-30636}
+  selector:
+    app: ${ds389_name:-ds389}
+  type: NodePort
+...
+
