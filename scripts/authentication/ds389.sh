@@ -5,7 +5,7 @@
 _admin_user="cn=Directory Manager"
 _admin_pwd="admin123"
 _uri="ldap://node101.mydemo.lab:30389"
-_connection_str="-D \"${_admin_user}\" -w \"${_admin_pwd}\" -x  -H \"${_uri}\""
+_connection_str="-D '${_admin_user}' -w '${_admin_pwd}' -x  -H '${_uri}'"
 _basedn="dc=mydemo,dc=lab"
 _ldap_user_dn="uid=ldap_user,ou=people,${_basedn}"
 _ldap_user_pwd="supersecret123"
@@ -57,16 +57,16 @@ EOL
 
 ## DS389: Verify ldap_user has access
 function ds389_ldap_user-access() {
-  ldapsearch -x  -D "${_ldap_user_dn}" -w "${__ldap_user_pwd}" -H "${_uri}"  -b "${_basedn}"
+  ldapsearch -x  -D "${_ldap_user_dn}" -w "${_ldap_user_pwd}" -H "${_uri}"  -b "${_basedn}"
 }
 
 
 
 ## DS389: Install 389 Directory server
 function ds389_install() {
-  template_file=${LAB_SETUP_PATH}/cloud-init/template_${_type}
+  template_file=389.yml
   process_templates >/tmp/389.yml
-  kubectl apply -f 389.yml 
+  kubectl apply -f /tmp/389.yml 
   sleep 60
   ds389_restrict_permissions
   ds389_ldap_user-user_private_read
