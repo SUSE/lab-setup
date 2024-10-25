@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ .Values.ds389.name }}
+  name: {{ .Values.ds389.name }}-internal-svc
+  namespace: {{ .Values.ds389.nsName }}
+spec:
+  clusterIP: None
+  ports:
+    - name: {{ .Values.ds389.name }}-port
+      port: {{ .Values.ds389.internalPort }}
+      protocol: TCP
+      targetPort: {{ .Values.ds389.internalPort }}
+    - name: {{ .Values.ds389.name }}-tls-port
+      port: {{ .Values.ds389.tlsPort }}
+      protocol: TCP
+      targetPort: {{ .Values.ds389.tlsPort }}
+  selector:
+    app: {{ .Values.ds389.name }}
+  type: ClusterIP
+

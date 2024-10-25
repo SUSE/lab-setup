@@ -1,24 +1,15 @@
 #!/bin/bash
 
 
+# example:
+#_admin_user="cn=Directory Manager"
+#_admin_pwd="admin123"
+#_uri="ldap://node101.mydemo.lab:30389"
+#_connection_str="-D '${_admin_user}' -w '${_admin_pwd}' -x  -H '${_uri}'"
+#_basedn="dc=mydemo,dc=lab"
+#_ldap_user_dn="uid=ldap_user,ou=people,${_basedn}"
+#_ldap_user_pwd="supersecret123"
 
-_admin_user="cn=Directory Manager"
-_admin_pwd="admin123"
-_uri="ldap://node101.mydemo.lab:30389"
-_connection_str="-D '${_admin_user}' -w '${_admin_pwd}' -x  -H '${_uri}'"
-_basedn="dc=mydemo,dc=lab"
-_ldap_user_dn="uid=ldap_user,ou=people,${_basedn}"
-_ldap_user_pwd="supersecret123"
-
-
-
-# Inspired from https://stackoverflow.com/questions/2914220/bash-templating-how-to-build-configuration-files-from-templates-with-bash#11050943
-function process_templates() {
-       eval "cat <<EOF
-$(cat ${template_file} )
-EOF
-"
-}
 
 
 
@@ -64,9 +55,19 @@ function ds389_ldap_user-access() {
 
 ## DS389: Install 389 Directory server
 function ds389_install() {
-  template_file=389.yml
-  process_templates >/tmp/389.yml
-  kubectl apply -f /tmp/389.yml 
+
+  # add the repo
+  helm repo add suse-lab-setup https://opensource.suse.com/lab-setup
+  helm repo update
+
+  # installs the chart with default parameters
+  if [[ -f values.yaml ]]
+  then
+    helm upgrade --install ds389 suse-lab-setup/ds389 -f values.yaml
+  else
+    helm upgrade --install ds389 suse-lab-setup/ds389
+  fi
+
   sleep 60
   ds389_restrict_permissions
   ds389_ldap_user-user_private_read

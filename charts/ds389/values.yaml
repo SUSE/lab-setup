@@ -1,0 +1,16 @@
+# Default values for ds389-helm-chart
+ds389:
+  nsName: "ds389"
+  name: "ds389"
+  image: "docker.io/389ds/dirsrv"
+  tlsKey: "LS0tLS1CRUdJTiBFTkNSWVBURUQgUFJJVkFURSBLRVktLS0tLQpNSUlKbnpCSkJna3Foa2lHOXcwQkJRMHdQREFiQmdrcWhraUc5dzBCQlF3d0RnUUlMZmtpMDkwcnZsb0NBZ2dBCk1CMEdDV0NHU0FGbEF3UUJLZy4uLkdOWWM3aTlTVkRCb0E9PQotLS0tLUVORCBFTkNSWVBURUQgUFJJVkFURSBLRVktLS0tLQ=="
+  tlsCert: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUZ4akNDQTY0Q0NRQ05UK2VQMnZqSnh6QU5CZ2txaGtpRzl3MEJBUXNGQURDQnBERUxNQWtHQTFVRUJoTUMKUmxJeEVqQVFCZ05WQkFnTUMuLi51ZEp3RTdIbm5BN2xwQQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0t"
+  dmPassword: "YWRtaW4xMjM="
+  rootDN: "dc=mydemo,dc=lab"
+  userPassword: "supersecret123"
+  vcSize: "5Gi"
+  internalPort: 3389
+  tlsPort: 3636
+  nodePort: 30389
+  nodePortTls: 30636
+
