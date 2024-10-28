@@ -62,7 +62,7 @@ EOL
 # Examples:
 #   ds389_user_private_read "ldap://ldap.mydemo.lab:389" "dc=mydemo,dc=lab" "cn=Directory Manager" "secret" "ldap_user"
 #######################################
-function ds389_ldap_user-user_private_read() {
+function ds389_ldap_user_user_private_read() {
   local _ldap_uri="$1"
   local _ldap_basedn="$2"
   local _admin_user="$3"
@@ -121,7 +121,7 @@ function ds389_install() {
   fi
   sleep 60
   ds389_restrict_permissions "${_ldap_uri}" "${_ldap_basedn}" "${_admin_user}" "${_admin_pwd}"
-  ds389_ldap_user-user_private_read "${_ldap_uri}" "${_ldap_basedn}" "${_admin_user}" "${_admin_pwd}" "ldap_user"
+  ds389_ldap_user_user_private_read "${_ldap_uri}" "${_ldap_basedn}" "${_admin_user}" "${_admin_pwd}" "ldap_user"
 }
 
 #######################################
