@@ -12,6 +12,10 @@
 #   ds389_restrict_permissions
 #######################################
 function ds389_restrict_permissions() {
+  local _ldap_uri=$1
+  local _ldap_basedn=$2
+  local _admin_user=$3
+  local _admin_pwd=$4
   ldapmodify -D "${_admin_user}" -w "${_admin_pwd}" -x  -H "${_ldap_uri}" << EOL
 dn: ou=people,${_ldap_basedn}
 changetype: modify
@@ -38,6 +42,10 @@ EOL
 #   ds389_user_private_read [<a_user>]
 #######################################
 function ds389_ldap_user-user_private_read() {
+  local _ldap_uri=${_ldap_uri}
+  local _ldap_basedn=${_ldap_basedn}
+  local _admin_user=${_admin_user}
+  local _admin_pwd=${_admin_pwd}
   ldapmodify -D "${_admin_user}" -w "${_admin_pwd}" -x  -H "${_ldap_uri}" << EOL
 dn: cn=user_private_read,ou=permissions,${_ldap_basedn}
 changetype: modify
@@ -58,6 +66,8 @@ EOL
 #   ds389_ldap_user_access_check "uid=ldap_user,ou=people,dc=mydemo,dc=lab" "mypassword"
 #######################################
 function ds389_ldap_user_access_check() {
+  local _ldap_uri=${_ldap_uri}
+  local _ldap_basedn=${_ldap_basedn}
   ldapsearch -x  -D "${1}" -w "${2}" -H "${_ldap_uri}"  -b "${_ldap_basedn}"
 }
 
@@ -72,6 +82,10 @@ function ds389_ldap_user_access_check() {
 #   ds389_install
 #######################################
 function ds389_install() {
+  local _ldap_uri=${_ldap_uri}
+  local _ldap_basedn=${_ldap_basedn}
+  local _admin_user=${_admin_user}
+  local _admin_pwd=${_admin_pwd}
   # add the repo
   helm repo add suse-lab-setup https://opensource.suse.com/lab-setup
   helm repo update
