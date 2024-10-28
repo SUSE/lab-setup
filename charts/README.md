@@ -7,6 +7,7 @@
 * [Let's Encrypt](letsencrypt/README.md)
 * [NFS-Ganesha](nfs-ganesha/README.md)
 * [NFS Server Provisioner](nfs-server-provisioner/README.md)
+* [Portworx BBQ](portworx-bbq/README.md)
 * [Rancher Cluster Template](rancher-cluster-templates/README.md)
 * [WordPress](wordpress/README.md)
 
