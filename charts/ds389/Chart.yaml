@@ -4,7 +4,7 @@ description: A Helm chart for deploying the 389 Directory Server
 version: 1.0.0
 appVersion: "1.0"
 maintainers:
-  - name: Raul Mahiques
+  - name: "Raul Mahiques"
 keywords:
   - ldap
   - '389'
