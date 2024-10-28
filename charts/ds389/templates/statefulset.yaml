@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ .Values.ds389.name }}
-  namespace: {{ .Values.ds389.nsName }}
+#  namespace: {{ .Values.ds389.nsName }}
 spec:
   serviceName: {{ .Values.ds389.name }}-internal-svc
   replicas: 1

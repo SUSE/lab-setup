@@ -4,7 +4,7 @@ metadata:
   labels:
     app: {{ .Values.ds389.name }}
   name: {{ .Values.ds389.name }}-external-svc
-  namespace: {{ .Values.ds389.nsName }}
+#  namespace: {{ .Values.ds389.nsName }}
 spec:
   ports:
     - name: {{ .Values.ds389.name }}-port

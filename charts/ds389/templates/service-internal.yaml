@@ -4,7 +4,7 @@ metadata:
   labels:
     app: {{ .Values.ds389.name }}
   name: {{ .Values.ds389.name }}-internal-svc
-  namespace: {{ .Values.ds389.nsName }}
+#  namespace: {{ .Values.ds389.nsName }}
 spec:
   clusterIP: None
   ports:
