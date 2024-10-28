@@ -5,6 +5,7 @@ version: 1.0.0
 appVersion: "1.0"
 maintainers:
   - name: "Raul Mahiques"
+    email: raul.mahiques@suse.com
 keywords:
   - ldap
   - '389'
