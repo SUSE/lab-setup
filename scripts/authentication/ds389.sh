@@ -67,12 +67,12 @@ function ds389_ldap_user-user_private_read() {
   local _ldap_basedn="$2"
   local _admin_user="$3"
   local _admin_pwd="$4"
-  local username="$5"
+  local ldap_user="$5"
   ldapmodify -D "${_admin_user}" -w "${_admin_pwd}" -x  -H "${_ldap_uri}" << EOL
 dn: cn=user_private_read,ou=permissions,${_ldap_basedn}
 changetype: modify
 add: member
-member: uid=${1:-ldap_user},ou=people,${_ldap_basedn}
+member: uid=${ldap_user},ou=people,${_ldap_basedn}
 EOL
 }
 
