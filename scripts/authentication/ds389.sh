@@ -121,7 +121,7 @@ function ds389_install() {
   fi
   sleep 60
   ds389_restrict_permissions "${_ldap_uri}" "${_ldap_basedn}" "${_admin_user}" "${_admin_pwd}"
-  ds389_ldap_user-user_private_read
+  ds389_ldap_user-user_private_read "${_ldap_uri}" "${_ldap_basedn}" "${_admin_user}" "${_admin_pwd}" "ldap_user"
 }
 
 #######################################
