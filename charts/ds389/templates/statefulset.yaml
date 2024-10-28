@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.ds389.name }}
+#  namespace: {{ .Values.ds389.nsName }}
+spec:
+  serviceName: {{ .Values.ds389.name }}-internal-svc
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.ds389.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.ds389.name }}
+    spec:
+      serviceAccountName: {{ .Values.ds389.name }}-sa
+      securityContext:
+        fsGroup: 499
+      initContainers:
+        - name: {{ .Values.ds389.name }}-init-container
+          image: busybox
+          command: ["/bin/sh", "-c", "chown -R 499:499 /data"]
+          volumeMounts:
+            - name: {{ .Values.ds389.name }}-data
+              mountPath: /data
+      containers:
+        - name: dirsrv-container
+          image: {{ .Values.ds389.image }}
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 60;
+                         dsconf localhost backend create --suffix {{ .Values.ds389.rootDN }} --be-name userroot --create-suffix --create-entries ;
+                         dsconf localhost pwpolicy set --pwdscheme=CRYPT-SHA512 ;
+                         dsconf localhost config replace nsslapd-rootpwstoragescheme=CRYPT-SHA512 ;
+                         dsconf localhost config replace nsslapd-rootpw={{ .Values.ds389.dm_pwd }} ;
+                         dsconf localhost plugin referential-integrity enable ;
+                         dsconf localhost plugin memberof enable ;
+                         dsconf localhost config replace nsslapd-allow-anonymous-access=off ;
+                         dsidm localhost --basedn {{ .Values.ds389.rootDN }} user create --uid ldap_user --cn ldap_user --displayName ldap_user --uidNumber 1001 --gidNumber 1001 --homeDirectory /home/ldap_user ;
+                         dsidm localhost -b {{ .Values.ds389.rootDN }}  account change_password uid=ldap_user,ou=people,{{ .Values.ds389.rootDN }} {{ .Values.ds389.users_pwd }} ;
+                         dsidm localhost --basedn {{ .Values.ds389.rootDN }} user create --uid developer --cn developer --displayName developer --uidNumber 1002 --gidNumber 1002 --homeDirectory /home/developer ;
+                         dsidm localhost -b {{ .Values.ds389.rootDN }} account change_password uid=developer,ou=people,{{ .Values.ds389.rootDN }} {{ .Values.ds389.users_pwd }} ;
+                         dsidm localhost --basedn {{ .Values.ds389.rootDN }} group create --cn developers;
+                         dsidm localhost -b {{ .Values.ds389.rootDN }} group add_member developers uid=developer,ou=people,{{ .Values.ds389.rootDN }}
+                         "]
+          env:
+            - name: DS_DM_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dirsrv-dm-password
+                  key: dm-password
+            - name: DS_SUFFIX_NAME
+              value: "{{ .Values.ds389.rootDN }}"
+            - name: DS_ERRORLOG_LEVEL
+              value: "8192"
+            - name: DS_MEMORY_PERCENTAGE
+              value: "10"
+            - name: DS_REINDEX
+              value: "True"
+            - name: DS_STARTUP_TIMEOUT
+              value: "120"
+          ports:
+            - containerPort: {{ .Values.ds389.internalPort }}
+              protocol: TCP
+            - containerPort: {{ .Values.ds389.tlsPort }}
+              protocol: TCP
+          securityContext:
+            runAsUser: 489
+          volumeMounts:
+            - name: {{ .Values.ds389.name }}-data
+              mountPath: "/data"
+            - name: dirsrv-tls
+              mountPath: '/data/tls/'
+              readOnly: true
+      volumes:
+        - name: dirsrv-tls
+          secret:
+            secretName: dirsrv-tls-secret
+            items:
+              - key: tls.key
+                path: server.key
+              - key: tls.crt
+                path: server.crt
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Values.ds389.name }}-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ .Values.ds389.vcSize }}
