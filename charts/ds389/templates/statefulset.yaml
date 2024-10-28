@@ -91,4 +91,3 @@ spec:
         resources:
           requests:
             storage: {{ .Values.ds389.vcSize }}
-

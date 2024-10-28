@@ -13,4 +13,3 @@ ds389:
   tlsPort: 3636
   nodePort: 30389
   nodePortTls: 30636
-

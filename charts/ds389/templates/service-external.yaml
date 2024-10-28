@@ -20,4 +20,3 @@ spec:
   selector:
     app: {{ .Values.ds389.name }}
   type: NodePort
-
