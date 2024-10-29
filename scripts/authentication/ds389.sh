@@ -115,9 +115,9 @@ function ds389_install() {
   # installs the chart with default parameters
   if [[ -f values.yaml ]]
   then
-    helm upgrade --install ds389  --namespace ds389 suse-lab-setup/ds389 -f values.yaml
+    helm upgrade --install ds389  --namespace ds389 --create-namespace suse-lab-setup/ds389 -f values.yaml
   else
-    helm upgrade --install ds389  --namespace ds389 suse-lab-setup/ds389
+    helm upgrade --install ds389  --namespace ds389 --create-namespace suse-lab-setup/ds389
   fi
   sleep 60
   ds389_restrict_permissions "${_ldap_uri}" "${_ldap_basedn}" "${_admin_user}" "${_admin_pwd}"
