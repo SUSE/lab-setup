@@ -130,6 +130,6 @@ function ds389_install() {
 #   ds389_uninstall
 #######################################
 function ds389_uninstall() {
-  helm uninstall ds389
+  helm uninstall ds389 -n ds389
   sleep 15 
 }
