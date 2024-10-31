@@ -15,6 +15,23 @@ entries:
     urls:
     - https://github.com/SUSE/lab-setup/releases/download/cow-demo-0.1.2/cow-demo-0.1.2.tgz
     version: 0.1.2
+  ds389:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2024-10-31T11:53:46.845775271Z"
+    description: A Helm chart for deploying the 389 Directory Server
+    digest: a576216d2d9536e9f25167569bfda17f1be4219562f24e9ea3c5a407dc4d913f
+    keywords:
+    - ldap
+    - "389"
+    - "636"
+    maintainers:
+    - email: raul.mahiques@suse.com
+      name: rmahique
+    name: ds389
+    urls:
+    - https://github.com/SUSE/lab-setup/releases/download/ds389-1.0.1/ds389-1.0.1.tgz
+    version: 1.0.1
   ds389-helm-chart:
   - apiVersion: v2
     appVersion: "1.0"
@@ -205,4 +222,4 @@ entries:
     urls:
     - https://github.com/SUSE/lab-setup/releases/download/wordpress-0.1.1/wordpress-0.1.1.tgz
     version: 0.1.1
-generated: "2024-10-28T14:58:05.6844738Z"
+generated: "2024-10-31T11:53:46.845795399Z"
