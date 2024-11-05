@@ -1,4 +1,3 @@
-# Default values for ds389-helm-chart
 ds389:
   nsName: "ds389"
   name: "ds389"

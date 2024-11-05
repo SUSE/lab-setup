@@ -1,6 +1,7 @@
 # Lab Setup
 
 [![CI](https://github.com/SUSE/lab-setup/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/SUSE/lab-setup/actions/workflows/ci.yml)
+[![PKG](https://github.com/SUSE/lab-setup/actions/workflows/pkg.yml/badge.svg?branch=main)](https://github.com/SUSE/lab-setup/actions/workflows/main.yml)
 
 Welcome! You'll find in this repository everything needed to setup a lab environment from open-source components.
 
