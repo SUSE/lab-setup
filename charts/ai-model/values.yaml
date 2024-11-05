@@ -9,6 +9,5 @@ resources:
     memory: '10Mi'
     cpu: '10m'
 ingress:
+  annotations:
   host:
-  certmanager:
-    issuer:
