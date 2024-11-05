@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.certmanager.issuer }}
     nginx.ingress.kubernetes.io/proxy-body-size: 50m
   labels:
     service: ai-model

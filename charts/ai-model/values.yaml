@@ -10,3 +10,5 @@ resources:
     cpu: '10m'
 ingress:
   host:
+  certmanager:
+    issuer:
