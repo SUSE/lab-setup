@@ -1,0 +1,236 @@
+nodes:
+- _type: Monitor
+  arguments:
+    failureState: CRITICAL
+    loggingLevel: WARN
+  description: |
+    If a pod is within a waiting state and contains a reason of CreateContainerConfigError, CreateContainerError,
+    CrashLoopBackOff, or ImagePullBackOff it will be seen as deviating.
+  function: {{ get "urn:stackpack:kubernetes-v2:shared:monitor-function:pods-in-waiting-state"  }}
+  id: -6
+  identifier: urn:custom:monitor:pods-in-waiting-state-v2
+  intervalSeconds: 30
+  name: Pods in Waiting State V2
+  remediationHint: |-
+    \{{#if reasons\}}
+    \{{#if reasons.CreateContainerConfigError\}}
+    ## CreateContainerConfigError
+
+    In case of CreateContainerConfigError common causes are a secret or ConfigMap that is referenced in [your pod](/#/components/\{{ componentUrnForUrl \}}), but doesn’t exist.
+
+    ### Missing ConfigMap
+
+    If case of a missing ConfigMap you see an error like `Error: configmap "mydb-config" not found` you see the error mention in the message of this monitor.
+
+    To solve this you should reference an existing ConfigMap.
+
+    An example:
+
+    ```markdown
+    # See if the configmap exists
+    kubectl get configmap mydb-config
+
+    # Create the correct configmap, this is just an example
+    kubectl create configmap mydb-config --from-literal=database_name=mydb
+
+    # Delete and recreate the pod using this configmag
+    kubectl delete -f mydb_pod.yaml
+    kubectl create -f mydb_pod.yaml
+
+    # After recreating the pod this pod should be in a running state.
+    # This is visible because the waiting pod monitor will not trigger anymore on this condition.
+    ```
+
+    ### Missing Secret
+
+    If case of a missing Secret you see an error like `Error from server (NotFound): secrets "my-secret" not found`
+    you see the error mention in the message of this monitor.
+
+    To solve this you should reference an existing ConfigMap.
+
+    An example:
+
+    ```markdown
+    # See if the secret exists
+    kubectl get secret mydb-secret
+
+    # Create the correct configmap, this is just an example
+    kubectl create secret mydb-secret --from-literal=password=mysupersecretpassword
+
+    # Delete and recreate the pod using this configmag
+    kubectl delete -f mydb_pod.yaml
+    kubectl create -f mydb_pod.yaml
+
+    # After recreating the pod this pod should be in a running state.
+    # This is visible because the waiting pod monitor will not trigger anymore on this condition.
+    ```
+    \{{/if\}}
+    \{{#if reasons.CreateContainerError\}}
+    ## CreateContainerError
+
+    Common causes for a CreateContainerError are:
+
+    - Command Not Available
+    - Issues Mounting a Volume
+    - Container Runtime Not Cleaning Up Old Containers
+
+    ### Command Not Available
+
+    In case of ‘`Command Not Available`’ you will find this in the reason field at the top of this monitor (full screen).
+    If this is the case, the first thing you need to investigate is to check that you have a valid ENTRYPOINT in the Dockerfile
+    used to build your container image.
+
+    If you don’t have access to the Dockerfile, you can configure your pod object by using
+    a valid command in the command attribute of the object.
+
+    Check if your pod has a command set by inspecting the [Configuration"](/#/components/\{{ componentUrnForUrl \}}#configuration) on the pod, e.g.:
+
+    ```markdown
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: nodeapp
+      labels:
+        app: nodeapp
+    spec:
+      containers:
+        - image: myimage/wrong-node-app
+          name: nodeapp
+          ports:
+            - containerPort: 80
+          **command: ["node", "index.js"]**
+    ```
+
+    If the pod does not have a command set, check the container definition to see if an ENTRYPOINT is set, here you see an example without an existing ENTRYPOINT.
+
+    if no exisiting ENTRYPOINT is set and the pod does not have a command the solution is to use a valid command in the pod definition:
+
+    ```markdown
+    FROM ****node:16.3.0-alpine
+    WORKDIR /usr/src/app
+    COPY package*.json ./
+
+    RUN npm install
+    COPY . .
+
+    EXPOSE 8080
+
+    **ENTRYPOINT []**
+    ```
+
+    ### Issues Mounting a Volume
+
+    In the case of a `volume mount problem` the message of this monitor will give you a hint. For example, if you have a message like:
+
+    ```
+    Error: Error response from daemon: create \mnt\data: "\\mnt\\data" includes invalid characters for a local volume name, only "[a-zA-Z0-9][a-zA-Z0-9_.-]" are allowed. If you intended to pass a host directory, use absolute path
+    ```
+
+    In this case you should use a change the path in the PersistentVolume definition to a valid path. e.g. /mnt/data
+
+    ### Container Runtime Not Cleaning Up Old Containers
+
+    In this case you will see a message like:
+
+    ```
+    The container name "/myapp_ed236ae738" is already in use by container "22f4edaec41cb193857aefcead3b86cdb69edfd69b2ab57486dff63102b24d29". You have to remove (or rename) that container to be able to reuse that name.
+    ```
+
+    This is an indication that the [container runtime](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
+    doesn’t clean up old containers.
+    In this case the node should be removed from the cluster and the node container runtime should be reinstalled
+    (or be recreated). After that the node should be (re)assigned to the cluster.
+
+    \{{/if\}}
+    \{{#if reasons.CrashLoopBackOff\}}
+    ## CrashLoopBackOff
+
+    When a Kubernetes container has errors, it can enter into a state called CrashLoopBackOff, where Kubernetes attempts to restart the container to resolve the issue.
+
+    The container will continue to restart until the problem is resolved.
+    
+    Take the following steps to diagnose the problem:
+
+    ### Container Logs
+    Check the container logs for any explicit errors or warnings
+
+    1. Inspect the [Logs](/#/components/\{{ componentUrnForUrl \}}#logs) of all the containers in this pod.
+    2. Scroll through it and validate if there is an excessive amount of errors.
+        1. if a container is crashing due to an out of memory error, the logs may show errors related to memory allocation or exhaustion.
+            - If this is the case check if the memory limits are too low in which case you can make them higher.
+            - If the memory problem is not resolved you might have introduced an memory leak in which case you want to take a look at the last deployment.
+            - If there are no limits you might have a proble with the physical memory on the node running the pod.
+        2. if a container is crashing due to a configuration error, the logs may show errors related to the incorrect configuration.
+
+    ### Understand application
+
+    It is important to understand what the intended behaviour of the application should be.
+    A good place to start is the [configuration](/#/components/\{{ componentUrnForUrl\}}#configuration).
+    Pay attention to environment variables and volume mounts as these are mechanism to configure the application.
+    We can use references to configmaps and secrets to futher explore configuration information.
+
+    ### Pod Events
+    Check the pod events to identify any explicit errors or warnings.
+      1. Go to the [Pod events page](/#/components/\{{ componentUrnForUrl \}}/events).
+      2. Check if there is a large amount of events like `BackOff`, `FailedScheduling` or `FailedAttachVolume`
+      3. If this is the case, see if the event details (click on the event) contains more information about this issue.
+
+    ### Recent Deployment
+    Look at the pod age in the "About" section on the [Pod highlight page](/#/components/\{{ componentUrnForUrl \}}) to identify any recent deployments that might have caused the issue
+
+    1. The "Age" is shown in the "About" section on the left side of the screen
+    2. If the "Age" and the time that the monitor was triggered are in close proximity then take a look at the most recent deployment by clicking on [Show last change](/#/components/\{{ componentUrnForUrl \}}#lastChange).
+    \{{/if\}}
+    \{{#if reasons.ImagePullBackOff\}}
+    ## ImagePullBackOff
+
+    If you see the "ImagePullBackOff" error message while trying to pull a container image from a registry, it means that
+    the Docker engine was unable to pull the requested image for some reason.
+
+    The reason field at the top of this monitor (full screen) might give you more information about the specific issue at hand.
+
+    ## Diagnose
+
+    To diagnose the problem, try the following actions:
+
+    - Go to the [pod events page filtered by failed or unhealthy events](/#/components/\{{ componentUrnForUrl \}}/events?view=eventTypes--Unhealthy,Created,FailedMount,Failed)
+
+      If there are no "Failed" events shown increase the time-range by clicking on the Zoom-out button on next to the telemetry-time-interval on the bottom left of the timeline.
+
+    Click on the left side of the [Pod highlight page](/#/components/\{{ componentUrnForUrl \}}) on "Containers" in the "Related resources"
+    to view the `containers` and the `Image URL`.
+
+    ## Common causes
+
+    ### Rate Limit
+    A docker hub rate limit has been reached.
+
+    Typical resolution is to authenticate using docker hub credentials (it will increase the rate limit from 100 to 200 pulls per 6 hours)
+    or to get a paid account and authenticate with that (bumping the limit to 5000 pulls per day).
+
+    ### Network connectivity issues
+    Check your internet connection or the connection to the registry where the image is hosted.
+
+    ### Authentication problems
+    If the registry requires authentication, make sure that your credentials are correct and that
+    you have the necessary permissions to access the image.
+
+    ### Image availability
+    Verify that the image you are trying to pull exists in the registry and that you have specified the correct image name and tag.
+
+    Here are some steps you can take to resolve the "ImagePullBackOff" error:
+
+    1. Check the registry logs for any error messages that might provide more information about the issue.
+    2. Verify that the image exists in the registry and that you have the correct image name and tag.
+    3. Check your network connectivity to ensure that you can reach the registry.
+    4. Check the authentication credentials to ensure that they are correct and have the necessary permissions.
+
+    If none of these steps work, you may need to consult the Docker documentation or contact support for the registry or Docker
+    itself for further assistance.
+    \{{/if\}}
+    \{{/if\}}
+  status: ENABLED
+  tags:
+  - pods
+  - containers
+timestamp: 2024-10-17T10:15:31.714348Z[Etc/UTC]
