@@ -1,0 +1,16 @@
+apiVersion: fleet.cattle.io/v1alpha1
+kind: ClusterGroup
+metadata:
+  name: build-a-dino
+  annotations:
+    {}
+    #  key: string
+  labels:
+    {}
+    #  key: string
+  namespace: fleet-default
+spec:
+  selector:
+    matchLabels:
+      gpu-enabled: 'true'
+      app: build-a-dino

@@ -1,0 +1,85 @@
+nodes:
+- _type: Monitor
+  arguments:
+    comparator: GT
+    failureState: DEVIATING
+    metric:
+      aliasTemplate: CPU Throttling for ${container} of ${pod_name}
+      query: 100 * sum by (cluster_name, namespace, pod_name, container) (container_cpu_throttled_periods{})
+        / sum by (cluster_name, namespace, pod_name, container) (container_cpu_elapsed_periods{})
+      unit: percent
+    threshold: 95.0
+    urnTemplate: urn:kubernetes:/${cluster_name}:${namespace}:pod/${pod_name}
+  description: |-
+    In Kubernetes, CPU throttling refers to the process where limits are applied to the amount of CPU resources a container can use.
+    This typically occurs when a container approaches the maximum CPU resources allocated to it, causing the system to throttle or restrict
+    its CPU usage to prevent a crash.
+
+    While CPU throttling can help maintain system stability by avoiding crashes due to CPU exhaustion, it can also significantly slow down workload 
+    performance. Ideally, CPU throttling should be avoided by ensuring that containers have access to sufficient CPU resources. 
+    This proactive approach helps maintain optimal performance and prevents the slowdown associated with throttling.
+  function: {{ get "urn:stackpack:common:monitor-function:threshold"  }}
+  id: -13
+  identifier: urn:custom:monitor:pod-cpu-throttling-v2
+  intervalSeconds: 60
+  name: CPU Throttling V2
+  remediationHint: |-
+
+    ### Application behaviour
+
+    Check the container [Logs](/#/components/\{{ componentUrnForUrl \}}#logs) for any hints on how the application is behaving under CPU Throttling
+
+    ### Understanding CPU Usage and CPU Throttling 
+
+    On the [pod metrics page](/#/components/\{{ componentUrnForUrl \}}/metrics) you will find the CPU Usage and CPU Throttling charts. 
+     
+    #### CPU Trottling
+
+    The percentage of CPU throttling over time. CPU throttling occurs when a container reaches its CPU limit, restricting its CPU usage to 
+    prevent it from exceeding the specified limit. The higher the percentage, the more throttling is occurring, which means the container's 
+    performance is being constrained.
+
+    #### CPU Usage
+
+    This chart shows three key CPU metrics over time:
+
+    1. Request: The amount of CPU the container requests as its minimum requirement. This sets the baseline CPU resources the container is guaranteed to receive.
+    2. Limit: The maximum amount of CPU the container can use. If the container's usage reaches this limit, throttling will occur.
+    3. Current: The actual CPU usage of the container in real-time.
+
+    The `Request` and `Limit` settings in the container can be seen in `Resource` section in [configuration](/#/components/\{{ componentUrnForUrl\}}#configuration)
+
+    #### Correlation 
+
+    The two charts are correlated in the following way:
+
+    - As the `Current` CPU usage approaches the CPU `Limit`, the CPU throttling percentage increases. This is because the container tries to use more CPU than it is allowed, and the system restricts it, causing throttling.
+    - The aim is to keep the `Current` usage below the `Limit` to minimize throttling. If you see frequent high percentages in the CPU throttling chart, it suggests that you may need to adjust the CPU limits or optimize the container's workload to reduce CPU demand.
+
+  
+    ### Adjust CPU Requests and Limits
+
+    On the [pod highlights page](/#/components/\{{ componentUrnForUrl \}}/highlights) and checking whether a `Deployment` event happened recently after which the cpu usage behaviour changed.
+    
+    You can investigate which change led to the cpu throttling by checking the [Show last change](/#/components/\{{ componentUrnForUrl \}}#lastChange),
+    which will highlight the latest changeset for the deployment. You can then revert the change or fix the cpu request and limit.
+
+
+    Review the pod's resource requests and limits to ensure they are set appropriately.
+    Show component [configuration](/#/components/\{{ componentUrnForUrl \}}#configuration)
+
+    If the CPU usage consistently hits the limit, consider increasing the CPU limit of the pod. <br/>
+    Edit the pod or deployment configuration file to modify the `resources.limits.cpu` and `resources.requests.cpu` as needed.
+    ```
+    resources:
+      requests:
+        cpu: "500m" # Adjust this value based on analysis
+      limits:
+        cpu: "1" # Adjust this value based on analysis
+    ```
+    If CPU throttling persists, consider horizontal pod autoscaling to distribute the workload across more pods, or adjust the cluster's node resources to meet the demands. Continuously monitor and fine-tune resource settings to optimize performance and prevent further throttling issues.
+  status: ENABLED
+  tags:
+  - cpu
+  - performance
+  - pod

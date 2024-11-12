@@ -68,6 +68,7 @@ download() {
     rm -rf ${OUTPUT_FOLDER}/scripts
   fi
   mv ${GIT_REPO_NAME}-${GIT_FOLDER}/scripts ${OUTPUT_FOLDER}
+  mv ${GIT_REPO_NAME}-${GIT_FOLDER}/assets ${OUTPUT_FOLDER}
 }
 
 cleanup() {
