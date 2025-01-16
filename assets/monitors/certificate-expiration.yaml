@@ -1,0 +1,48 @@
+nodes:
+- _type: Monitor
+  arguments:
+    criticalThreshold: 1w
+    deviatingThreshold: 30d
+    query: type = "secret" AND label = "secret-type:certificate"
+    resourceName: Certificate
+    timestampProperty: certificateExpiration
+  description: Verify certificates that are close to it's expiration date
+  function: {{ get "urn:stackpack:common:monitor-function:topology-timestamp-threshold-monitor"  }}
+  id: -12
+  identifier: urn:custom:monitor:certificate-expiration-v2
+  intervalSeconds: 60
+  name: Certificate Expiration V2
+  remediationHint: |
+
+    Certificate expiration date `\{{certificateExpiration\}}`.
+
+    ### Obtain new TLS certificates
+
+    If you're using a Certificate Authority (CA) or a third-party provider, follow their procedures to obtain a new TLS certificate.
+    Once validated, download the new TLS certificate and the corresponding private key from the third-party provider's dashboard or via their API.
+    When you have downloaded these two files, you can update the Secret with the new certificate and key data.
+
+    ```
+    kubectl create secret tls \{{name\}} --cert=path/to/new/certificate.crt --key=path/to/new/private.key
+    ```
+
+    2. **Generate new self-signed certificates**:
+
+    If you're using self-signed certificates, you can generate new ones locally and update the Secret with the new certificate and key data.
+    Use tools like OpenSSL to generate new self-signed certificates.
+
+    ```
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout path/to/new/private.key -out path/to/new/certificate.crt
+    ```
+
+    Update the Secret with the new certificate and key data.
+
+    ```
+    kubectl create secret tls \{{name\}} --cert=path/to/new/certificate.crt --key=path/to/new/private.key
+    ```
+
+    Alternatively you can edit the existing secret with **`kubectl edit secret \{{name\}}`** and replace the certificate and key data with the new ones obtained from the third-party provider or generated locally.
+  status: ENABLED
+  tags:
+  - certificate
+  - secret
