@@ -16,7 +16,7 @@ nodes:
     To understand the full monitor definition check the details.
   function: {{ get "urn:stackpack:common:monitor-function:threshold"  }}
   id: -13
-  identifier: urn:custom:monitor:out-of-memory-for-containers-v2
+  identifier: urn:custom:monitor:out-of-memory-containers-v2
   intervalSeconds: 30
   name: Out of memory for containers V2
   remediationHint: |-
