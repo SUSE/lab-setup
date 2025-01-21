@@ -10,7 +10,7 @@ nodes:
   function: {{ get "urn:stackpack:common:monitor-function:topology-timestamp-threshold-monitor"  }}
   id: -12
   identifier: urn:custom:monitor:certificate-expiration-v2
-  intervalSeconds: 60
+  intervalSeconds: 30
   name: Certificate Expiration V2
   remediationHint: |
 
