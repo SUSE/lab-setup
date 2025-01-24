@@ -12,5 +12,5 @@ longhorn_install() {
     curl -k https://raw.githubusercontent.com/longhorn/longhorn/refs/heads/master/scripts/environment_check.sh 2>/dev/null | bash || exit 1
     echo '=== Install LongHorn'
     helm upgrade -i longhorn longhorn/longhorn --namespace longhorn-system --create-namespace --set ingress.enabled=true --set ingress.host=$hostname --set persistence.migratable=true --set longhornUI.replicas=1
-    echo '<<< Longhorn should be available in a few minutes in: $hostname"
+    echo "<<< Longhorn should be available in a few minutes in: $hostname"
 }
