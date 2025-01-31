@@ -65,16 +65,29 @@ rancher_first_login() {
 #   rancher_wait_capiready
 #######################################
 rancher_wait_capiready() {
-  while true; do
+
+_counter=0
+while [[ $_counter -lt 50 ]]; do
+  _counter=0
+  while [[ $_counter -lt 25 ]]; do
     status=$(kubectl get deployment capi-controller-manager -n cattle-provisioning-capi-system -o jsonpath='{.status.conditions[?(@.type=="Available")].status}' 2>/dev/null)
     if [ "$status" == 'True' ]; then
       echo 'Deployment capi-controller-manager is available'
       break
     fi
     sleep 10
+    ((_counter++))
+    echo "Waiting for capi-controller-manager to become available... attempt ${_counter}/25"
   done
-  while [[ $(kubectl get endpoints capi-webhook-service -n cattle-provisioning-capi-system -o jsonpath='{.subsets}' 2>/dev/null) == '' ]]; do
+  _counter=0
+  while [[ $_counter -lt 25 ]]; do
+    if [[ ! $(kubectl get endpoints capi-webhook-service -n cattle-provisioning-capi-system -o jsonpath='{.subsets}' 2>/dev/null) == '' ]]; then
+      echo 'Endpoint is ready'
+      break
+    fi
     sleep 10
+    ((_counter++))
+    echo "Waiting for endpoint capi-webhook-service to be ready... attempt ${_counter}/25"
   done
   echo 'Service capi-webhook-service is ready'
 }
