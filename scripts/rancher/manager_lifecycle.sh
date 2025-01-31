@@ -99,8 +99,6 @@ rancher_first_login() {
 #######################################
 rancher_wait_capiready() {
 
-_counter=0
-while [[ $_counter -lt 50 ]]; do
   _counter=0
   while [[ $_counter -lt 25 ]]; do
     status=$(kubectl get deployment capi-controller-manager -n cattle-provisioning-capi-system -o jsonpath='{.status.conditions[?(@.type=="Available")].status}' 2>/dev/null)
