@@ -15,14 +15,14 @@ k8s_install_certmanager() {
   helm repo add jetstack https://charts.jetstack.io
   helm repo update
   kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/${version}/cert-manager.crds.yaml
-  if $? -ne 0; then
+  if [ $? -ne 0 ]; then
     echo "Failed to install cert-manager CRDs"
     exit 1
   fi
   helm upgrade --install cert-manager jetstack/cert-manager \
     --namespace cert-manager --create-namespace \
     --version ${version}
-  if $? -ne 0; then
+  if [ $? -ne 0 ]; then
     echo "Failed to install cert-manager"
     exit 1
   fi
@@ -48,7 +48,7 @@ k8s_create_letsencryptclusterissuer() {
     --namespace cert-manager \
     --set ingress.className=${ingressClassname} \
     --set registration.emailAddress=${emailAddress}
-  if $? -ne 0; then
+  if [ $? -ne 0 ]; then
     echo "Failed to create Let's Encrypt cluster issuer"
     exit 1
   fi
