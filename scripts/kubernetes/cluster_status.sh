@@ -36,13 +36,4 @@ k8s_wait_fornodesandpods() {
     echo "$NOT_READY_PODS"
     exit 1
   fi
-
-  while true; do
-    if [ "$NOT_READY_PODS" -eq 0 ]; then
-      echo 'All pods are in Running or Completed status.'
-      break
-    else
-      sleep 5
-    fi
-  done
 }
