@@ -29,11 +29,16 @@ k8s_wait_fornodesandpods() {
     echo 'Waiting for pods to be available...'
     sleep 5
   done
-  kubectl wait --for=condition=Ready pods --all-namespaces --timeout=300s
-  if [ $? -ne 0 ]; then
-    NOT_READY_PODS=$(kubectl get pods --all-namespaces --field-selector=status.phase!=Running,status.phase!=Succeeded --no-headers)
-    echo 'Some pods are not ready.'
-    echo "$NOT_READY_PODS"
-    exit 1
-  fi
+  while true; do
+    NOT_READY_PODS=$(kubectl get pods --all-namespaces --field-selector=status.phase!=Running,status.phase!=Succeeded --no-headers 2>/dev/null | wc -l)
+    if [ "$NOT_READY_PODS" -eq 0 ]; then
+      echo 'All pods are in Running or Completed status.'
+      break
+    else
+      # print pods not in Running or Completed status
+      kubectl get pods --all-namespaces --field-selector=status.phase!=Running,status.phase!=Succeeded --no-headers
+      echo "Sleeping..."
+      sleep 10
+    fi
+  done
 }
