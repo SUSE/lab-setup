@@ -11,6 +11,53 @@ rancher_list_clusters() {
   kubectl get clusters.provisioning.cattle.io --all-namespaces -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
 }
 
+
+#######################################
+# Shows Kubernetes version
+# Examples:
+#   get_k8s_version
+#######################################
+get_k8s_version() {
+  #  echo 'Retrieving Kubernetes version'
+  kubectl version -o yaml | yq .serverVersion.gitVersion
+}
+
+
+
+#######################################
+# Shows Rancher version
+# Globals:
+#   RANCHER_CLUSTER_URL
+# Arguments:
+#   rancher_cluster_url - optional if RANCHER_CLUSTER URL is defined
+# Examples:
+#   get_rancher_version https://rancher.clustername.domain.name/
+# Return format:
+#   {"Version":"v2.10.2","GitCommit":"a8208b7884a5115d31bfda65de78e3a65798179f","RancherPrime":"true"}
+#######################################
+get_rancher_version() {
+  # echo 'Retrieving Rancher version'
+  # Thanks Eduardo Mínguez and Josh Meranda
+  # other options:
+  #  kubectl get po -n cattle-system -l app=rancher -o jsonpath='{.items[0].spec.containers[0].image}'
+  #  R: registry.rancher.com/rancher/rancher:v2.10.1
+  #  kubectl exec -it -n cattle-system  $(kubectl get po -n cattle-system -l app=rancher -o name) -- rancher --version
+  #  R: rancher version v2.10.1 (daaa287448fe866f141beead10ae93ffc2400469)
+  if [[ "$1" != "" ]]
+  then
+    local _rancher_url=${1}ancherversion
+  else
+    local _rancher_url=
+  fi
+  if [[ "${_rancher_url}" != "" ]] && [[ "${_rancher_url}" =~ "https://" ]]; then
+    curl -k ${_rancher_url}/rancherversion
+  else
+    echo "ERROR: Missing or incorrect rancher URL"
+    exit 1
+  fi
+}
+
+
 #######################################
 # Create downstream custom cluster in Rancher (don't wait and retrieve name)
 # Globals:
