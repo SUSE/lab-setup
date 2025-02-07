@@ -35,7 +35,10 @@ k8s_wait_fornodesandpods() {
       echo 'All pods are in Running or Completed status.'
       break
     else
-      sleep 5
+      # print pods not in Running or Completed status
+      kubectl get pods --all-namespaces --field-selector=status.phase!=Running,status.phase!=Succeeded --no-headers
+      echo "Sleeping..."
+      sleep 10
     fi
   done
 }
