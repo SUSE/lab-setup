@@ -111,6 +111,7 @@ rancher_wait_capiready() {
   done
   if [[ $_counter -eq 25 ]]; then
     echo 'Deployment capi-controller-manager is not available'
+    kubectl get deployment capi-controller-manager -n cattle-provisioning-capi-system -o jsonpath='{.status}'
     exit 1
   fi
   _counter=0
