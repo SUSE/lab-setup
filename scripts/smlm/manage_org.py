@@ -60,7 +60,7 @@ def smlm_del_org(key, client, orgid):
   """
   Deletes an organization from SMLM
   """
-  print(orgid)
+  print("Organization id to be delted: " + orgid)
   result = client.org.delete(key, orgid)
   print(result)
 
