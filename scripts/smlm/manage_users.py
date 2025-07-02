@@ -7,7 +7,7 @@
 #
 
 from xmlrpc.client import ServerProxy
-import ssl, argparse, yaml
+import ssl, argparse, yaml, sys
 
 
 
@@ -50,6 +50,22 @@ def smlm_addRole_user(key, client, login, role):
   return users
 
 
+def smlm_delete_user(key, client, login):
+  """
+  Delete a user
+  """
+  users = client.user.delete(key, login)
+  return users
+
+
+def smlm_disable_user(key, client, login):
+  """
+  Disable user
+  """
+  users = client.user.disable(key, login)
+  return users
+
+
 def smlm_enable_user(key, client, login):
   """
   Enable user
@@ -74,6 +90,19 @@ def smlm_setReadOnly_user(key, client, login, readOnly=True):
   return users
 
 
+def smlm_listAssignableRoles(key, client):
+  """
+  Returns a list of user roles that this user can assign to others.
+  """
+  roles = client.user.listAssignableRoles(key)
+  return roles
+
+
+def smlm_listUsers(key, client):
+  """
+  Returns a list of users.
+  """
+  return client.user.listUsers(key)
 
 
 def main():
@@ -83,19 +112,19 @@ def main():
   # Define how we want to process command line arguments
   parser = argparse.ArgumentParser(prog='smlm_user',description='Manages SMLM Users')
   group = parser.add_mutually_exclusive_group(required=True)
-  group.add_argument('-a','--add', action='store_true', help='Add Organization')
-  group.add_argument('-d','--delete', action='store_true', help='Delete Organization')
-  group.add_argument('-g','--get', action='store_true', help='Retrieve Organization information')
-  group.add_argument('-l','--list', action='store_true', help='List Organizations')
+  group.add_argument('-a','--add', action='store_true', help='Add User')
+  group.add_argument('-d','--delete', action='store_true', help='Delete User')
+  group.add_argument('-g','--get', action='store_true', help='Retrieve User information')
+  group.add_argument('-l','--list', action='store_true', help='List Users and Assignable Roles')
   parser.add_argument('-u', '--user', type=str, required=True, help='User name with privileges to create other users')
   parser.add_argument('-p', '--pwd', type=str, required=True, help='Password for user')
   parser.add_argument('-s', '--server', type=str, required=True, help='Server FQDN')
-  parser.add_argument('--nusr', type=str, required=True, help='New user login name.')
-  parser.add_argument('--npwd', type=str, required=True, help='New user password.')
+  parser.add_argument('--nusr', type=str, help='New user login name.')
+  parser.add_argument('--npwd', type=str, help='New user password.')
   parser.add_argument('--nfirstname', type=str, help="New user first name.")
   parser.add_argument('--nlastname', type=str, help="New user last name.")
   parser.add_argument('--nemail', type=str, help="New user e-mail.")
-  parser.add_argument('--nrole', required=True, type=str, help='New user role' )
+  parser.add_argument('--nrole', type=str, help='New user role' )
   parser.add_argument('--debug', action='store_true', help="Use it to enable debug messages.")
   inputparam=parser.parse_args()
 
@@ -105,28 +134,29 @@ def main():
   key, client = smlm_login(inputparam.server, inputparam.user, inputparam.pwd)
 
   if(inputparam.add):
+    if( not inputparam.nrole or not inputparam.npwd or not inputparam.nusr):
+      sys.exit("Missing parameters, --nusr --npwd and --nrole are required")
+      
     print("We add " + str(inputparam.nusr))
     smlm_create_user(key, client, inputparam.nusr, inputparam.npwd, inputparam.nfirstname or None, inputparam.nlastname or None, inputparam.nemail or None )
     smlm_addRole_user(key, client, inputparam.nusr, inputparam.nrole)
     smlm_enable_user(key, client, inputparam.nusr)
     smlm_setErrataNotifications_user(key, client, inputparam.nusr)
-    smlm_setReadOnly_user(key, client, inputparam.nusr)
 
-
-    smlm_add_org(key, client, inputparam.orgname, inputparam.admusr, inputparam.admpwd, inputparam.admprefix, inputparam.admfirstname, inputparam.admlastname, inputparam.admemail, inputparam.usepam or False)
   elif(inputparam.delete):
-    print("Not implemented yet")
-#    print("We delete " + str(inputparam.orgname))
-#    orgid=smlm_get_orgid(key, client, inputparam.orgname)
-#    smlm_del_org(key, client, orgid)
+#    print("Not implemented yet")
+    print("We delete " + str(inputparam.nusr))
+    smlm_delete_user(key, client, inputparam.nusr)
   elif(inputparam.get):
     print("Not implemented yet")
 #    print("We retrive information about: " + str(inputparam.orgname))
 #    print(str(smlm_get_org(key, client, inputparam.orgname)))
   elif(inputparam.list):
-    print("Not implemented yet")
-#    print("We are retrieving the list of organizations")
-#    print(yaml.dump(smlm_list_orgs(key, client)))
+    print("We are retrieving the list of users and assignable roles")
+    print("Assignable Roles:")
+    print(yaml.dump(smlm_listAssignableRoles(key, client)))
+    print("Existing Users")
+    print(yaml.dump(smlm_listUsers(key, client)))
   else:
     print("Invalid or missing parameters")
     if(inputparam.debug):
