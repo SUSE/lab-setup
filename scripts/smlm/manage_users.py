@@ -137,25 +137,22 @@ def main():
     if( not inputparam.nrole or not inputparam.npwd or not inputparam.nusr):
       sys.exit("Missing parameters, --nusr --npwd and --nrole are required")
       
-    print("We add " + str(inputparam.nusr))
+    print("Adding user " + str(inputparam.nusr))
     smlm_create_user(key, client, inputparam.nusr, inputparam.npwd, inputparam.nfirstname or None, inputparam.nlastname or None, inputparam.nemail or None )
     smlm_addRole_user(key, client, inputparam.nusr, inputparam.nrole)
     smlm_enable_user(key, client, inputparam.nusr)
     smlm_setErrataNotifications_user(key, client, inputparam.nusr)
 
   elif(inputparam.delete):
-#    print("Not implemented yet")
-    print("We delete " + str(inputparam.nusr))
+    print("Deleting user " + str(inputparam.nusr))
     smlm_delete_user(key, client, inputparam.nusr)
   elif(inputparam.get):
     print("Not implemented yet")
-#    print("We retrive information about: " + str(inputparam.orgname))
-#    print(str(smlm_get_org(key, client, inputparam.orgname)))
   elif(inputparam.list):
-    print("We are retrieving the list of users and assignable roles")
+    print("Retrieving the list of users and assignable roles")
     print("Assignable Roles:")
     print(yaml.dump(smlm_listAssignableRoles(key, client)))
-    print("Existing Users")
+    print("Existing Users:")
     print(yaml.dump(smlm_listUsers(key, client)))
   else:
     print("Invalid or missing parameters")
@@ -168,7 +165,4 @@ def main():
 
 if __name__ == '__main__':
   main()
-
-
-
 

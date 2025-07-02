@@ -204,25 +204,25 @@ def main():
   key, client = smlm_login(inputparam.server, inputparam.user, inputparam.pwd)
 
   if(inputparam.add and inputparam.akname and inputparam.description and inputparam.basechannellabel):
-    print("We add " + str(inputparam.akname))
+    print("Adding activation key " + str(inputparam.akname))
     smlm_create_ak(key, client, inputparam.akname, inputparam.description, inputparam.basechannellabel or '', inputparam.usagelimit or 0, inputparam.entitlements or [], inputparam.universal or False, inputparam.appstreams or [], inputparam.childchannels or [], inputparam.configchannels or [], inputparam.packages or [], inputparam.servergroups or [])
   elif(inputparam.delete):
-    print("We delete " + str(inputparam.akname))
+    print("Deleting activation key " + str(inputparam.akname))
     smlm_del_ak(key, client, inputparam.akname)
   elif(inputparam.get):
-    print("We retrive information about: " + str(inputparam.akname))
+    print("Retrieving information about activation key: " + str(inputparam.akname))
     print(str(smlm_get_ak(key, client, inputparam.akname)))
   elif(inputparam.list):
-    print("We are retrieving the list of Activation Keys")
+    print("Retrieving the list of Activation Keys")
     print(yaml.dump(smlm_list_aks(key, client)))
   elif(inputparam.list_appstreams):
-    print("We are retrieving the list of App. Streams ")
+    print("Retrieving the list of App. Streams ")
     if inputparam.basechannellabel:
       print(yaml.dump(smlm_list_appstreams(key, client, inputparam.basechannellabel)))
     else:
       print("Missing --basechannellabel, use --list_channels to retrieve the list of channels")
   elif(inputparam.list_childchannels):
-    print("We are retrieving the list of Child channels")
+    print("Retrieving the list of Child channels")
     smlm_channels = smlm_list_channels(key, client)
     smlm_softwarechannels = smlm_list_childchannels(key, client)
     for i in smlm_channels:
@@ -237,16 +237,16 @@ def main():
           if o["parent_label"] == i["label"]:
             print("\t- " + o["label"])
   elif(inputparam.list_configchannels):
-    print("We are retrieving the list of Config Channels")
+    print("Retrieving the list of Config Channels")
     print(yaml.dump(smlm_list_configchannels(key, client)))
   elif(inputparam.list_packages):
-    print("We are retrieving the list of Packages")
+    print("Retrieving the list of Packages")
     if inputparam.basechannellabel:
       print(yaml.dump(smlm_list_packages(key, client, inputparam.basechannellabel)))
     else:
       print("Missing basechannellabel parameter indicating the channel")
   elif(inputparam.list_servergroups):
-    print("We are retrieving the list of Server Groups")
+    print("Retrieving the list of Server Groups")
     print(yaml.dump(smlm_list_servergroups(key, client)))
   else:
     print("Invalid or missing parameters")
@@ -259,7 +259,4 @@ def main():
 
 if __name__ == '__main__':
   main()
-
-
-
 

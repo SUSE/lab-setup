@@ -96,17 +96,17 @@ def main():
   key, client = smlm_login(inputparam.server, inputparam.user, inputparam.pwd)
 
   if(inputparam.add and inputparam.orgname and inputparam.admusr and inputparam.admpwd and inputparam.admprefix and inputparam.admfirstname and inputparam.admlastname and inputparam.admemail):
-    print("We add " + str(inputparam.orgname))
+    print("Adding organization " + str(inputparam.orgname))
     smlm_add_org(key, client, inputparam.orgname, inputparam.admusr, inputparam.admpwd, inputparam.admprefix, inputparam.admfirstname, inputparam.admlastname, inputparam.admemail, inputparam.usepam or False)
   elif(inputparam.delete):
-    print("We delete " + str(inputparam.orgname))
+    print("Deleting organization " + str(inputparam.orgname))
     orgid=smlm_get_orgid(key, client, inputparam.orgname)
     smlm_del_org(key, client, orgid)
   elif(inputparam.get):
-    print("We retrive information about: " + str(inputparam.orgname))
+    print("Retrieving information about organization: " + str(inputparam.orgname))
     print(str(smlm_get_org(key, client, inputparam.orgname)))
   elif(inputparam.list):
-    print("We are retrieving the list of organizations")
+    print("Retrieving the list of organizations")
     print(yaml.dump(smlm_list_orgs(key, client)))
   else:
     print("Invalid or missing parameters")
@@ -119,5 +119,4 @@ def main():
 
 if __name__ == '__main__':
   main()
-
 
