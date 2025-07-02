@@ -42,12 +42,12 @@ def smlm_create_user(key, client, login, password, firstName=None, lastName=None
   users = client.user.create(key, login, password, firstName, lastName, email)
   return users
 
-def smlm_addRole_user(key, client, login, role):
+def smlm_addRole_user(key, client, login, roles):
   """
   Adds a role to the user
   """
-  users = client.user.addRole(key, login, role)
-  return users
+  for role in roles.split(','):
+    client.user.addRole(key, login, role)
 
 
 def smlm_delete_user(key, client, login):
