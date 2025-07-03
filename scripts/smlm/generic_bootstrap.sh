@@ -70,6 +70,8 @@ echo "    - When reactivating Salt minion, use REACTIVATION_KEY variable"
 echo "      Consider using environmental variable REACTIVATION_KEY for single use reactivation keys."
 echo
 
+
+echo "ACTIVATION_KEYS=${ACTIVATION_KEYS} ORG_GPG_KEY=${ORG_GPG_KEY} HOSTNAME=${HOSTNAME:-mlm-server.geeko.land} REACTIVATION_KEY=${REACTIVATION_KEY} CLIENT_OVERRIDES=${CLIENT_OVERRIDES:-client-config-overrides.txt} ORG_CA_CERT=${ORG_CA_CERT:-RHN-ORG-TRUSTED-SSL-CERT} USING_SSL=${USING_SSL:-1} USING_GPG=${USING_GPG:-1}"
 # can be edited, but probably correct (unless created during initial install):
 # NOTE: ACTIVATION_KEYS *must* be used to bootstrap a client machine.
 ACTIVATION_KEYS=${ACTIVATION_KEYS}
