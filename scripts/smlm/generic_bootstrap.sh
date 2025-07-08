@@ -855,8 +855,12 @@ if [ $REGISTER_THIS_BOX -eq 1 ]; then
         echo "* removing old Salt PKI files"
         rm -r "$MINION_PKI_CONF"
     fi
-
-    echo "$MYNAME" > "$MINION_ID_FILE"
+    
+    if [ -n "$PROFILENAME" ]; then
+      echo "$PROFILENAME" > "$MINION_ID_FILE"
+    else
+      echo "$MYNAME" > "$MINION_ID_FILE"
+    fi
     cat <<EOF > "$SUSEMANAGER_MASTER_FILE"
 master: $HOSTNAME
 server_id_use_crc: adler32
@@ -871,19 +875,19 @@ grains:
     susemanager:
 EOF
     if [ -n "$ACTIVATION_KEYS" ]; then
-        echo "Using activation key: "$ACTIVATION_KEYS""
+        echo "Using activation key: "$ACTIVATION_KEYS" with configuration file $SUSEMANAGER_MASTER_FILE"
         cat <<EOF >>"$SUSEMANAGER_MASTER_FILE"
         activation_key: "$(echo $ACTIVATION_KEYS | cut -d, -f1)"
 EOF
     fi
     if [ -n "$REACTIVATION_KEY" ]; then
-        echo "Using reactivation key: "$REACTIVATION_KEY""
+        echo "Using reactivation key: "$REACTIVATION_KEY" with configuration file $SUSEMANAGER_MASTER_FILE"
         cat <<EOF >>"$SUSEMANAGER_MASTER_FILE"
         management_key: "$(echo $REACTIVATION_KEY)"
 EOF
     fi
     if [ -n "$PROFILENAME" ]; then
-        echo "Setting profile name to: $PROFILENAME"
+        echo "Setting profile name to: $PROFILENAME with configuration file $SUSEMANAGER_MASTER_FILE"
         cat <<EOF >>"$SUSEMANAGER_MASTER_FILE"
         profile_name: "$(echo $PROFILENAME)"
 EOF
