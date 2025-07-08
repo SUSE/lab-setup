@@ -882,11 +882,12 @@ EOF
         management_key: "$(echo $REACTIVATION_KEY)"
 EOF
     fi
-    if [ -n "$PROFILE_NAME" ]; then
-        echo "Setting profile name to: $PROFILE_NAME"
+    if [ -n "$PROFILENAME" ]; then
+        echo "Setting profile name to: $PROFILENAME"
         cat <<EOF >>"$SUSEMANAGER_MASTER_FILE"
-        profile_name: "$(echo $PROFILE_NAME)"
+        profile_name: "$(echo $PROFILENAME)"
 EOF
+        
     fi
     cat <<EOF >> "$SUSEMANAGER_MASTER_FILE"
 
