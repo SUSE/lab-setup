@@ -88,6 +88,38 @@ def smam_system_getDetails(key, client, sid):
   return results
 
 
+def smlm_schedule_HardwareRefresh(key, client, sid, when):
+  """
+  Schedule a hardware refresh for a system.
+  """
+  if not when:
+    earliest_occurrence = datetime.datetime.now(datetime.timezone.utc)
+  else:
+    earliest_occurrence = when
+  results = client.system.scheduleHardwareRefresh(key, sid, earliest_occurrence )
+  return results
+
+
+def smlm_schedule_state(key, client, sid, state, when, test=False):
+  """
+  Schedule a state/s for a system.
+  """
+  if not when:
+    earliest_occurrence = datetime.datetime.now(datetime.timezone.utc)
+  else:
+    earliest_occurrence = when
+  states=[]
+  if not state:
+    states=['certs','channels','packages','services.salt-minion']
+  else:
+    for i in state.split(','):
+      states.append(i)
+
+  results = client.system.scheduleApplyStates(key, sid, states, earliest_occurrence, test )
+  return results
+
+
+
 def main():
   """
   Main function that parses the command-line arguments and initiate the API calls.
@@ -100,6 +132,8 @@ def main():
   group.add_argument('-l','--list', action='store_true', help='List all system groups')
   group.add_argument('--scheduleapplyhighstate', action='store_true', help='Schedule highstate application for a given system.')
   group.add_argument('--schedulepackagerefresh', action='store_true', help='Schedule a package list refresh for a system.')
+  group.add_argument('--schedulehardwarerefresh', action='store_true', help='Schedule a hardware refresh for a system.')
+  group.add_argument('--schedulestate', action='store_true', help='Schedule a state refresh for a system.')
   group.add_argument('-g','--getinfo', action='store_true', help='Get system info')
   parser.add_argument('-u', '--user', type=str, required=True, help='User name with privileges to create other users')
   parser.add_argument('-p', '--pwd', type=str, required=True, help='Password for user')
@@ -108,6 +142,7 @@ def main():
   parser.add_argument('--system', type=str, help='System name.')
   parser.add_argument('--keyvalue', type=str, help="Custom key value.")
   parser.add_argument('--executiondate', type=str, help="Date for the action to be executed, default is now, format: " + str(datetime.datetime.now(datetime.timezone.utc)) +".")
+  parser.add_argument('--state', type=str, help='state/s serparated by , .')
   parser.add_argument('--debug', action='store_true', help="Use it to enable debug messages.")
   inputparam=parser.parse_args()
 
@@ -145,6 +180,22 @@ def main():
     print("Scheduleing a package refresh for system " + str(inputparam.system))
     systemid=smlm_get_systemid(key, client, inputparam.system)
     results=smlm_schedule_packageRefresh(key, client, systemid[0]['id'], inputparam.executiondate)
+
+  elif(inputparam.schedulehardwarerefresh):
+    if( not inputparam.system):
+      sys.exit("Missing parameters, --system is required")
+    print("Scheduleing a hardware refresh for system " + str(inputparam.system))
+    systemid=smlm_get_systemid(key, client, inputparam.system)
+    results=smlm_schedule_HardwareRefresh(key, client, systemid[0]['id'], inputparam.executiondate)
+
+  elif(inputparam.schedulestate):
+    if( not inputparam.system):
+      sys.exit("Missing parameters, --system is required")
+    print("Scheduleing a state " + str(inputparam.state) + " refresh for system " + str(inputparam.system))
+    systemid=smlm_get_systemid(key, client, inputparam.system)
+
+    results=smlm_schedule_state(key, client, systemid[0]['id'], inputparam.state, inputparam.executiondate, test=False)
+
   elif(inputparam.getinfo):
     if( not inputparam.system):
       sys.exit("Missing parameters, --system is required")
