@@ -14,14 +14,18 @@ observability_agent_install_nowait() {
     local cluster_name=$2
     local ingestion_api_key=$3
     echo "Installing Observability agent..."
+    echo "  URL: $url"
+    echo "  Cluster name: $cluster_name"
+    echo "  Ingestion API key: $ingestion_api_key"
+
     helm repo add suse-observability https://charts.rancher.com/server-charts/prime/suse-observability
     helm repo update
 
     helm upgrade --install suse-observability-agent suse-observability/suse-observability-agent \
         --namespace suse-observability --create-namespace \
-        --set stackstate.apiKey=${ingestion_api_key} \
+        --set stackstate.apiKey="${ingestion_api_key}" \
         --set stackstate.url="${url%/}/receiver/stsAgent" \
-        --set stackstate.cluster.name=${cluster_name}
+        --set stackstate.cluster.name="${cluster_name}"
 }
 
 #######################################
