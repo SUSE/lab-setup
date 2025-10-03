@@ -1,0 +1,81 @@
+_version: 1.0.85
+nodes:
+- _type: Monitor
+  arguments:
+    deviatingThreshold: 0.05
+    loggingLevel: WARN
+    timeWindow: 2 minutes
+  description: |-
+    HTTP responses with a status code in the 5xx range indicate server-side errors such as a misconfiguration, overload or internal server errors.
+    To ensure a good user experience, the percentage of 5xx responses should be less than the configured percentage (5% is the default) of the total HTTP responses for a Kubernetes (K8s) service.
+    To understand the full monitor definition check the details.
+    Because the exact threshold and severity might be application dependent, the thresholds can be overriden via a Kubernetes annotation on the service. For example to override the pre-configured deviating threshold and instead only have a critical threshold at 6% put this annotation on your service:
+    ```
+    monitor.kubernetes-v2.stackstate.io/http-error-ratio-for-service: |
+      {
+        "criticalThreshold": 0.06,
+        "deviatingThreshold": null
+      }
+    ```
+    Omitting the deviating threshold from this json snippet would have kept it at the configured 5%, with the critical threshold at 6% that means that the monitor would only result in a deviating state for an error ratio between 5% and 6%.
+  function: {{ get "urn:stackpack:prime-kubernetes:shared:monitor-function:http-error-ratio-for-service"  }}
+  id: -8
+  identifier: urn:stackpack:custom:shared:monitor:http-error-ratio-for-service-v2
+  intervalSeconds: 10
+  name: HTTP - 5xx error ratio
+  remediationHint: |-
+    We have detected that more than 5% of the total responses from your Kubernetes service have a 5xx status code,
+    this signals that a significant number of users are experiencing downtime and service interruptions.
+    Take the following steps to diagnose the problem:
+
+    ## Possible causes
+    - Slow dependency or dependency serving errors
+    - Recent update of the application
+    - Load on the application has increased
+    - Code has memory leaks
+    - Environment issues (e.g. certain nodes, database or services that the service depends on)
+
+    ### Slow dependency or dependency serving errors
+    Check, in the related health violations of this monitor (which can be found in the expanded version if you read this in the pinned minimised version) if there are any health violations on one of the services or pods that this service depends on (focus on the lowest dependency). If you find a violation (deviating or critical health), click on that component to see the related health violations in table next to it. You can than click on those health violations to follow the instructions to resolve the issue.
+
+    ### New behavior of the service
+    If there are no dependencies that have health violations, it could be that the pod backing this service is returning errors. If this behavior is new, it could be caused by a recent deployment.
+
+    This can be checked by looking at the Events shown on the [service highlights page](/#/components/\{{ componentUrnForUrl \}}/highlights) and checking whether a `Deployment` event happened recently after which the HTTP Error ratio behaviour changed.
+
+    To troubleshoot further, you can have a look at the pod(s) backing this service.
+    - Click on the "Pods of this service" in the "Related resource" section of the [service highlight page](/#/components/\{{ componentUrnForUrl \}})
+    - Click on the pod name(s) to go to their highlights pages
+    - Check the logs of the pod(s) to see if they're returning any errors.
+
+    ### Recent update of the service
+    Check if the service was recently updated:
+    - See the Age in the "About" section to identify on the [service highlight page](/#/components/\{{ componentUrnForUrl \}})
+      is this is recently deployed
+    - Check if any of the pods are recently updated by clicking on "Pods of this service" in "Related resource" section of
+      the [service highlight page](/#/components/\{{ componentUrnForUrl \}}) and look if their Age is recent.
+    - If application has just started, it might be that the service has not warmed up yet. Compare the response time metrics
+      for the current deployment with the previous deployment by checking the response time metric chart with a time interval including both.
+    - Check if application is using more resources than before, consider scaling it up or giving it more resources.
+    - If increased latency is crucial, consider rolling back the service to the previous version:
+        - if that helps, then the issue is likely with new deployment
+        - if that does not help, then the issue may be in the environment (e.g. network issues or issues with the underlying infrastructure, e. g. database)
+    ### Load on the service has increased
+    - Check if the amount of requests to the service has increased by looking at the "Throughput (HTTP responses/s)" chart for the "HTTP response metrics for all clients (incoming requests)" on the [service highlight page](/#/components/\{{ componentUrnForUrl \}}).
+      If so, consider scaling up the service or giving it more resources.
+    ### Code has memory leaks
+    - Check if memory or CPU usage have been increasing over time. If so, there might be a memory leak.
+      You can find the pods supporting this service by clicking on "Pods of this service" in "Related resource"
+      section of the [service highlight page](/#/components/\{{ componentUrnForUrl \}}).
+      Check which pods are using the most disk space by clicking on the left side of the [service highlight page](/#/components/\{{ componentUrnForUrl \}}) on "Pods of this service"
+        - Check all the pods supporting this service by clicking on the pod name
+        - Check the resource usage on the "Resource usage" section
+    - Restart the pod(s) of this service that is having the issue or add more memory/cpu
+    ### Environment issues
+    - Check latency of particular pods of the service. If only certain pods are having issues, might be an issue with the node the pod is running on:
+        - Try to move the pod to another node
+        - Check if other pods of other services are also having latency increased on that node. Drain the node if that is the case.
+  status: ENABLED
+  tags:
+  - services
+timestamp: 2025-01-16T13:16:53.208687Z[Etc/UTC]

@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    {{- .Values.ingress.annotations | toYaml | nindent 4 }}
+  labels:
+    service: ai-model
+    {{- include "common.labels" . | nindent 4 }}
+  name: ai-model
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: {{ .Values.ingress.host }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: ai-model
+            port:
+              number: 11434
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - {{ .Values.ingress.host }}
+    secretName: tls-secret

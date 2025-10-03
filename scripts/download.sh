@@ -60,14 +60,15 @@ setup_env() {
 
 download() {
   info 'Download scripts'
-  wget https://github.com/SUSE/${GIT_REPO_NAME}/archive/${GIT_REVISION}.zip -O ${GIT_REPO_NAME}.zip
-  unzip -o ${GIT_REPO_NAME}.zip
+  wget -nv https://github.com/SUSE/${GIT_REPO_NAME}/archive/${GIT_REVISION}.zip -O ${GIT_REPO_NAME}.zip
+  unzip -q -o ${GIT_REPO_NAME}.zip
   mkdir -p ${OUTPUT_FOLDER}
   if [ -d ${OUTPUT_FOLDER}/scripts ]; then
     info "Delete ${OUTPUT_FOLDER}/scripts"
     rm -rf ${OUTPUT_FOLDER}/scripts
   fi
   mv ${GIT_REPO_NAME}-${GIT_FOLDER}/scripts ${OUTPUT_FOLDER}
+  mv ${GIT_REPO_NAME}-${GIT_FOLDER}/assets ${OUTPUT_FOLDER}
 }
 
 cleanup() {

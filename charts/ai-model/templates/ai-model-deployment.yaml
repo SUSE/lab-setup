@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-model
+  labels:
+    service: ai-model
+    {{- include "common.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: ai-model
+      {{- include "common.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "common.labels" . | nindent 8 }}
+        service: ai-model
+      annotations:
+        checksum/config: '{{ include (print $.Template.BasePath "/ai-model-cm.yaml") . | sha256sum}}'
+    spec:
+      containers:
+      - name: ai-model
+        image: {{.Values.image}}
+        env:
+        - name: CONFIG_FILE
+          value: /etc/app/config.toml
+        ports:
+        - containerPort: 8080
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/app
+      volumes:
+      - name: config-volume
+        configMap:
+          name: ai-model-cm
+          items:
+          - key: config.toml
+            path: config.toml

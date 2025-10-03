@@ -1,0 +1,24 @@
+apiVersion: fleet.cattle.io/v1alpha1
+kind: GitRepo
+metadata:
+  name: build-a-dino
+  annotations:
+    {}
+    #  key: string
+  labels:
+    {}
+    #  key: string
+  namespace: fleet-default
+spec:
+  branch: main
+  correctDrift:
+    enabled: true
+#    force: boolean
+#    keepFailHistory: boolean
+  insecureSkipTLSVerify: false
+  paths:
+    - /fleet/build-a-dino
+#    - string
+  repo: https://github.com/wiredquill/prime-rodeo
+  targets:
+    - clusterGroup: build-a-dino

@@ -1,0 +1,13 @@
+nameOverride: ''
+fullnameOverride: ''
+image: ravan/mockroservice:0.0.23
+resources:
+  requests:
+    memory: '8Mi'
+    cpu: '5m'
+  limits:
+    memory: '10Mi'
+    cpu: '10m'
+ingress:
+  annotations:
+  host:

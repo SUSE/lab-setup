@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ai-model-cm
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+data:
+  config.toml: |
+     # General configuration
+     port = 11434
+     address = "0.0.0.0"
+     serviceName = "AI Model"
+     logLevel = "info"
+
+     # Endpoints
+     [[endpoints]]
+     uri = "/api/chat"
+     delay = "1000ms"
+     body.status = "success"
+     body.msg = "Your dino is a T-Rex"
+
+     [endpoints.logging]
+     before = "Processing [[.Endpoint.Uri]] request"
+     beforeLevel = "Info"
+     after = "Completed [[.Endpoint.Uri]] request"
+     afterLevel = "Info"
+
+     # OpenTelemetry
+     [otel.trace]
+     enabled = false
+     tracer-name = "ai-model"
+
