@@ -19,7 +19,7 @@ observability_create_ingestion_api_key() {
   local resp
   /usr/local/bin/sts rbac create-subject --subject $cluster_name-agent --service-token $service_token --url $url
   /usr/local/bin/sts rbac grant --subject $cluster_name-agent --permission update-metrics --service-token $service_token --url $url
-  resp=$(/usr/local/bin/sts service-token create --name $PROD_CLUSTER_NAME --roles $PROD_CLUSTER_NAME-agent --service-token $service_token --url $url -o json)
+  resp=$(/usr/local/bin/sts service-token create --name $cluster_name --roles $cluster_name-agent --service-token $service_token --url $url -o json)
 
   echo $resp | jq -r '."service-token".token'
 }
