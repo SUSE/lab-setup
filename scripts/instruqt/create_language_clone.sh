@@ -80,6 +80,12 @@ cd - >/dev/null
 cp ${lab}/config.yml ${lab}-${lang}/
 sed "s/^\(slug\)\(.*\)/\1\2-${lang}/;" -i ${lab}-${lang}/config.yml
 cp ${lab}/track.yml ${lab}-${lang}/
+if grep '^maintenance:' ${lab}-${lang}/track.yml >/dev/null
+then
+  sed 's/^maintenance:.*/maintenance: true/' -i ${lab}-${lang}/track.yml
+else
+  echo 'maintenance: true' >> ${lab}-${lang}/track.yml
+fi
 
 
 echo -e "${PROGRESS}Change the variables inside config.yml if you wish to personalize it, otherwise just copy it as it is${NC}
