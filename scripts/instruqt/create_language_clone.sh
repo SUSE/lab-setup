@@ -78,7 +78,7 @@ done
 cd - >/dev/null
 
 cp ${lab}/config.yml ${lab}-${lang}/
-sed "s/^\(slug\)\(.*\)/\1\2-${lang}/;" -i ${lab}-${lang}/config.yml
+
 cp ${lab}/track.yml ${lab}-${lang}/
 if grep '^maintenance:' ${lab}-${lang}/track.yml >/dev/null
 then
@@ -86,7 +86,7 @@ then
 else
   echo 'maintenance: true' >> ${lab}-${lang}/track.yml
 fi
-
+sed "s/^\(slug\)\(.*\)/\1\2-${lang}/i;s/^\(title\)\(.*\)/\1\2 - ${lang^^}/i" -i ${lab}-${lang}/track.yml
 
 echo -e "${PROGRESS}Change the variables inside config.yml if you wish to personalize it, otherwise just copy it as it is${NC}
 \tvim  ${lab}-${lang}/config.yml
